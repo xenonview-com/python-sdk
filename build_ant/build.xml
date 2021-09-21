@@ -1,0 +1,219 @@
+<project name="view" default="all">
+    <property name="src.dir" value="view_python_sdk"/>
+    <property name="test.dir" value="acceptance"/>
+    <condition property="testToRun" value="-k ${test}" else="-v">
+        <isset property="test"/>
+    </condition>
+
+    <target name="test" depends="clean">
+        <path id="test.files">
+            <fileset dir="${src.dir}">
+                <patternset>
+                    <include name="*_test.py"/>
+                    <include name="*.py"/>
+                </patternset>
+            </fileset>
+        </path>
+        <pathconvert pathsep="," property="testfiles" refid="test.files"/>
+
+        <exec executable="coverage" failonerror="true">
+            <arg value="run"/>
+            <arg value="-p"/>
+            <arg value="--source=${testfiles}"/>
+            <arg value="-m"/>
+            <arg value="py.test"/>
+            <arg value="${src.dir}"/>
+            <arg value="-vv"/>
+            <arg value="-s"/>
+            <arg value="--junitxml=py.test.xml"/>
+            <arg value="${testToRun}"/>
+        </exec>
+    </target>
+
+    <target name="coverage" depends="test">
+        <exec executable="coverage" failonerror="true">
+            <arg value="combine"/>
+        </exec>
+        <exec executable="coverage" failonerror="true">
+            <arg value="report"/>
+            <arg value="-m"/>
+            <arg value="--omit=*_uncovered.py,*_test.py,*test_helper.py,/usr/*,.python3-sandbox/*,${test.dir}/*"/>
+        </exec>
+        <exec executable="coverage" failonerror="true">
+            <arg value="xml"/>
+            <arg value="--omit=*_uncovered.py,*_test.py,*test_helper.py,/usr/*,.python3-sandbox/*,${test.dir}/*"/>
+        </exec>
+        <exec executable="coverage" failonerror="true">
+            <arg value="html"/>
+            <arg value="--omit=*_uncovered.py,*_test.py,*test_helper.py,/usr/*,.python3-sandbox/*,${test.dir}/*"/>
+        </exec>
+        <exec executable="coverage" failonerror="true">
+            <arg value="erase"/>
+        </exec>
+    </target>
+
+    <target name="duplication">
+        <property name="filelist.file" value=".filesToDedup"/>
+        <path id="clonedigger.files">
+            <fileset dir="${src.dir}">
+                <patternset>
+                    <include name="**/*.py"/>
+                </patternset>
+            </fileset>
+        </path>
+        <pathconvert pathsep=" " property="clonediggerfiles" refid="clonedigger.files"/>
+        <echo file="${filelist.file}" message="${clonediggerfiles}"/>
+
+        <exec executable="clonedigger" failonerror="true">
+            <arg value="--distance-threshold=1"/>
+            <arg value="--file-list=${filelist.file}"/>
+            <arg value="--output=with_duplicate_analysis.html"/>
+        </exec>
+        <exec executable="/bin/rm">
+            <arg value="${filelist.file}"/>
+        </exec>
+        <exec executable="python2" failonerror="true">
+            <arg value="ensure_passing.py"/>
+            <arg value="--build_step=duplication"/>
+            <arg value="with_duplicate_analysis.html"/>
+        </exec>
+        <exec executable="/bin/rm">
+            <arg value="with_duplicate_analysis.html"/>
+        </exec>
+    </target>
+
+    <target name="complexity">
+        <apply executable="radon" parallel="true" failonerror="true">
+            <arg value="cc"/>
+            <arg value="-s"/>
+            <arg value="-nb"/>
+            <fileset dir="${src.dir}">
+                <patternset>
+                    <include name="**/*.py"/>
+                </patternset>
+            </fileset>
+        </apply>
+        <exec executable="/bin/rm">
+            <arg value="-f"/>
+            <arg value=".complexity.json"/>
+        </exec>
+        <apply executable="radon" parallel="true" failonerror="true" output=".complexity.json">
+            <arg value="cc"/>
+            <arg value="-j"/>
+            <fileset dir="${src.dir}">
+                <patternset>
+                    <include name="**/*.py"/>
+                </patternset>
+            </fileset>
+        </apply>
+        <exec executable="python2" failonerror="true">
+            <arg value="ensure_passing.py"/>
+            <arg value="--build_step=complexity"/>
+            <arg value="--threshold=7"/>
+            <arg value=".complexity.json"/>
+        </exec>
+    </target>
+
+    <target name="test-coverage" depends="clean,test,coverage"/>
+
+    <target name="all"/>
+
+    <target name="clean">
+        <path id="temp.files">
+            <fileset dir=".">
+                <patternset>
+                    <include name=".coverage*"/>
+                </patternset>
+            </fileset>
+        </path>
+        <pathconvert pathsep=" " property="tempfiles" refid="temp.files"/>
+        <exec executable="/bin/rm">
+            <arg line="-f ${tempfiles}"/>
+        </exec>
+
+        <exec executable="/bin/rm">
+            <arg value="-f"/>
+            <arg value="with_duplicate_analysis.html"/>
+            <arg value="py.test.xml"/>
+            <arg value="coverage.xml"/>
+            <arg value="README.txt"/>
+            <arg value="MANIFEST"/>
+            <arg value=".complexity.json"/>
+            <arg value=".filesToDedup"/>
+            <arg value="acceptanceHttps.log"/>
+        </exec>
+    </target>
+
+    <!--<target name="acceptance" depends="clean, run-app">-->
+    <!--<path id="test.files">-->
+    <!--<fileset dir="${test.dir}">-->
+    <!--<patternset>-->
+    <!--<include name="**/*.py"/>-->
+    <!--</patternset>-->
+    <!--</fileset>-->
+    <!--</path>-->
+    <!--<pathconvert pathsep="," property="testfiles" refid="test.files"/>-->
+
+    <!--<exec executable="./in_virtual_env" failonerror="true">-->
+    <!--<arg value="coverage"/>-->
+    <!--<arg value="run"/>-->
+    <!--<arg value="-p"/>-->
+    <!--<arg value="&#45;&#45;source=${testfiles}" />-->
+    <!--<arg value="-m" />-->
+    <!--<arg value="py.test" />-->
+    <!--<arg value="${test.dir}"/>-->
+    <!--<arg value="-vv" />-->
+    <!--<arg value="-s" />-->
+    <!--<arg value="&#45;&#45;junitxml=py.test.xml" />-->
+    <!--<arg value="${testToRun}" />-->
+    <!--</exec>-->
+    <!--</target>-->
+
+    <target name="package" depends="">
+        <exec executable="python3">
+            <arg value="setup.py"/>
+            <arg value="sdist"/>
+            <arg value="bdist_wheel"/>
+        </exec>
+        <path id="package.file">
+            <fileset dir="dist">
+                <patternset>
+                    <include name="**/*.tar.gz"/>
+                </patternset>
+            </fileset>
+        </path>
+        <pathconvert pathsep="" property="packageToInstall" refid="package.file"/>
+        <exec executable="mkdir">
+            <arg value="-p"/>
+            <arg value="pip_package"/>
+        </exec>
+        <exec executable="cp">
+            <arg value="${packageToInstall}"/>
+            <arg value="pip_package/."/>
+        </exec>
+        <exec executable="twine" failonerror="true">
+            <arg value="check"/>
+            <arg value="dist/*"/>
+        </exec>
+    </target>
+    <target name="deploy-test" depends="package">
+        <exec executable="twine" failonerror="true">
+            <arg value="upload"/>
+            <arg value="--config-file"/>
+            <arg value="/data/.pypirc"/>
+            <arg value="-r"/>
+            <arg value="testpypi"/>
+            <arg value="dist/*"/>
+        </exec>
+    </target>
+    <target name="deploy-prod" depends="package">
+        <exec executable="twine" failonerror="true">
+            <arg value="upload"/>
+            <arg value="--config-file"/>
+            <arg value="/data/.pypirc"/>
+            <arg value="-r"/>
+            <arg value="pypi"/>
+            <arg value="dist/*"/>
+        </exec>
+    </target>
+</project>

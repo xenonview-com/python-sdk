@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+{
+unamestr=$(uname)
+scriptDir=$(dirname "$0")
+mkdir -p ${scriptDir}/working/.
+
+if [[ "$unamestr" == 'Linux' ]]; then
+    scriptDir=$(readlink -f "$scriptDir")
+elif [[ "$unamestr" == 'Darwin' ]]; then
+    scriptDir=$(greadlink -f "$scriptDir")
+fi
+} &> /dev/null
+
+bump2version --allow-dirty patch build_ant/setup.py view_python_sdk/__init__.py

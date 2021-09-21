@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+{
+unamestr=$(uname)
+scriptDir=$(dirname "$0")
+mkdir -p ${scriptDir}/working/.
+
+if [[ "$unamestr" == 'Linux' ]]; then
+    scriptDir=$(readlink -f "$scriptDir")
+elif [[ "$unamestr" == 'Darwin' ]]; then
+    scriptDir=$(greadlink -f "$scriptDir")
+fi
+} &> /dev/null
+
+read -r -p "PYPI username: " USER
+read -r -s -p "PYPI password: " PASS
+echo ''
+cat > $scriptDir/working/.pypirc <<EOF
+[pypi]
+username: ${USER}
+password: ${PASS}
+
+[testpypi]
+username: ${USER}
+password: ${PASS}
+EOF
+
+$scriptDir/ant $*

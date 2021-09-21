@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+{
+unamestr=$(uname)
+scriptDir=$(dirname "$0")
+mkdir -p ${scriptDir}/working
+
+if [[ "$unamestr" == 'Linux' ]]; then
+    scriptDir=$(readlink -f "$scriptDir")
+elif [[ "$unamestr" == 'Darwin' ]]; then
+    scriptDir=$(greadlink -f "$scriptDir")
+fi
+} &> /dev/null
+
+{
+rm -rf "$scriptDir"/working/view_python_sdk
+mkdir -p ${scriptDir}/working/view_python_sdk
+
+cp -R "$scriptDir"/view_python_sdk "$scriptDir"/working/view_python_sdk
+cp -R "$scriptDir"/build_ant/* "$scriptDir"/working
+cp "$scriptDir"/README.md "$scriptDir"/working/.
+pushd "$scriptDir"/docker
+} &> /dev/null
+
+echo "Building ant environment..."
+{
+	docker build -f DockerfileAnt -t python-sdk-ant .
+} &> /dev/null
+
+echo "running..."
+set +e
+docker run -it --rm -v "$scriptDir"/working:/data --name python-sdk-ant python-sdk-ant $@
+set -e
+
+rm -rf "$scriptDir"/working/view_python_sdk
+rm -rf "$scriptDir"/working/ant.sh
+rm -rf "$scriptDir"/working/build.xml
+rm -rf "$scriptDir"/working/*.py
+rm -rf "$scriptDir"/working/pytest.ini
+rm -rf "$scriptDir"/working/build
+rm -rf "$scriptDir"/working/*.egg-info
+rm -rf "$scriptDir"/working/README.md
+rm -rf "$scriptDir"/working/.pypirc
+rm -rf "$scriptDir"/working/dist
