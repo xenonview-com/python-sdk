@@ -71,7 +71,7 @@ After you have initialized the View singleton, you can also view journeys:
         print(str(View().journeys()))
 ```
 
-##<a name="license"></a>
+## <a name="license"></a>
 ## License 
 
 Apache Version 2.0

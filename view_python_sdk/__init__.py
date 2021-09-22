@@ -1,5 +1,5 @@
 __title__ = 'view-python-sdk'
-__version__ = '0.0.3'
+__version__ = '0.0.1'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
