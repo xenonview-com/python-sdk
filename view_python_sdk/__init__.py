@@ -1,5 +1,5 @@
 __title__ = 'view-python-sdk'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
@@ -20,6 +20,9 @@ class View(object, metaclass=Singleton):
             raise ValueError('View should be initialized with an API Key from Xenon.')
         self.__apiKey = apiKey
         self.__apiUrl = apiUrl
+
+    def setKey(self, apiKey):
+        self.__apiKey = apiKey
 
     def journey(self, journey, PostMethod=post, sleepTime=1, verify=True):
         headers = {"Authorization": "Bearer " + self.__apiKey}

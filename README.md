@@ -71,6 +71,18 @@ After you have initialized the View singleton, you can also view journeys:
         print(str(View().journeys()))
 ```
 
+### Delayed setting of the API Key
+Optionally you can set the API Key later:
+
+```python
+    from view_python_sdk import View
+
+
+    def test_createView():
+        View('TBD')
+        View().setKey('<API KEY>')
+```
+
 ## <a name="license"></a>
 ## License 
 
