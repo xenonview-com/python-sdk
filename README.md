@@ -90,7 +90,7 @@ Optionally you can set the API Key later:
 
     def test_createView():
         View('TBD')
-        View().setKey('<API KEY>')
+        View().key('<API KEY>')
 ```
 
 ## <a name="license"></a>

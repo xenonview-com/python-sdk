@@ -2,12 +2,13 @@
 Created on September 20, 2021
 @author: lwoydziak
 '''
-from mockito.matchers import any
+from mockito.matchers import any, Contains
 from mockito.mocking import mock
 from mockito.mockito import verify, when
+from pytest import raises
 from requests.exceptions import SSLError
 
-from view_python_sdk import View
+from view_python_sdk import View, ApiException
 
 apiKey = '<apiKey>'
 apiUrl = '<apiUrl>'
@@ -68,4 +69,7 @@ def test_ApiGetJourneysFails():
     response.status_code = 400
     when(requests).post('https://<apiUrl>/journeys', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
-    assert not View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
+    with raises(ApiException) as e:
+        View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
+
+    assert Contains('Api responded with error.').matches(str(e.exconly()))

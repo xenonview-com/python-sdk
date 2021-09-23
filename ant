@@ -16,7 +16,7 @@ fi
 rm -rf "$scriptDir"/working/view_python_sdk
 mkdir -p ${scriptDir}/working/view_python_sdk
 
-cp -R "$scriptDir"/view_python_sdk "$scriptDir"/working/view_python_sdk
+cp -R "$scriptDir"/view_python_sdk "$scriptDir"/working
 cp -R "$scriptDir"/build_ant/* "$scriptDir"/working
 cp "$scriptDir"/README.md "$scriptDir"/working/.
 pushd "$scriptDir"/docker

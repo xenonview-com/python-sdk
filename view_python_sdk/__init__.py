@@ -1,5 +1,5 @@
-__title__ = 'view-python-sdk'
-__version__ = '0.0.3'
+__title__ = 'view_python_sdk'
+__version__ = '0.0.4'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
@@ -31,8 +31,10 @@ class View(object, metaclass=Singleton):
         self.__apiKey = apiKey
         self.__apiUrl = apiUrl
 
-    def setKey(self, apiKey):
-        self.__apiKey = apiKey
+    def key(self, apiKey=None):
+        if apiKey:
+            self.__apiKey = apiKey
+        return self.__apiKey
 
     def journey(self, journey, PostMethod=post, sleepTime=1, verify=True):
         headers = {"Authorization": "Bearer " + self.__apiKey}
