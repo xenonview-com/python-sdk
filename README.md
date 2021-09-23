@@ -71,6 +71,16 @@ After you have initialized the View singleton, you can also view journeys:
         print(str(View().journeys()))
 ```
 
+### Error handling
+In the event of an API error, an exception will be raised with the response from the API as [Requests response object](https://docs.python-requests.org/en/latest/user/quickstart/#response-content):
+```python
+    from view_python_sdk import View, ApiException
+    try:
+        response = View().journey([{'step': 'a step in the journey'}])
+    except ApiException as e:
+        print(str(e.apiResponse().status_code))
+```
+
 ### Delayed setting of the API Key
 Optionally you can set the API Key later:
 

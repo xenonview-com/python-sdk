@@ -1,5 +1,5 @@
 __title__ = 'view-python-sdk'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
@@ -12,6 +12,16 @@ from json import dumps
 from singleton3 import Singleton
 from requests.api import post
 from time import sleep
+
+
+class ApiException(Exception):
+    def __init__(self, response, *args, **kwargs):
+        super(ApiException, self).__init__(*args, **kwargs)
+        self.__response = response
+
+    def apiResponse(self):
+        return self.__response
+
 
 
 class View(object, metaclass=Singleton):
@@ -29,7 +39,7 @@ class View(object, metaclass=Singleton):
         journeyApi = {
             "name": "ApiJourney",
             "parameters": {
-                "journey": [journey]
+                "journey": journey
             }
         }
         response = None
@@ -46,7 +56,7 @@ class View(object, metaclass=Singleton):
                 continue
 
         if not response or not int(response.status_code) == 200:
-            return None
+            raise ApiException(response, "Api responded with error.")
 
         jsonResponse = response.json()
         return jsonResponse
@@ -71,7 +81,7 @@ class View(object, metaclass=Singleton):
                 continue
 
         if not response or not int(response.status_code) == 200:
-            return None
+            raise ApiException(response, "Api responded with error.")
 
         jsonResponse = response.json()
         return jsonResponse
