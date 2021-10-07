@@ -13,10 +13,10 @@ fi
 } &> /dev/null
 
 {
-rm -rf "$scriptDir"/working/view_python_sdk
-mkdir -p ${scriptDir}/working/view_python_sdk
+rm -rf "$scriptDir"/working/xenon_view_sdk
+mkdir -p ${scriptDir}/working/xenon_view_sdk
 
-cp -R "$scriptDir"/view_python_sdk "$scriptDir"/working
+cp -R "$scriptDir"/xenon_view_sdk "$scriptDir"/working
 cp -R "$scriptDir"/build_ant/* "$scriptDir"/working
 cp "$scriptDir"/README.md "$scriptDir"/working/.
 pushd "$scriptDir"/docker
@@ -32,7 +32,7 @@ set +e
 docker run -it --rm -v "$scriptDir"/working:/data --name python-sdk-ant python-sdk-ant $@
 set -e
 
-rm -rf "$scriptDir"/working/view_python_sdk
+rm -rf "$scriptDir"/working/xenon_view_sdk
 rm -rf "$scriptDir"/working/ant.sh
 rm -rf "$scriptDir"/working/build.xml
 rm -rf "$scriptDir"/working/*.py

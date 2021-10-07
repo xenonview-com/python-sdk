@@ -12,4 +12,4 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 fi
 } &> /dev/null
 
-bump2version --allow-dirty patch build_ant/setup.py view_python_sdk/__init__.py
+bump2version --allow-dirty patch build_ant/setup.py xenon_view_sdk/__init__.py

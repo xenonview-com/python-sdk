@@ -1,5 +1,5 @@
 <project name="view" default="all">
-    <property name="src.dir" value="view_python_sdk"/>
+    <property name="src.dir" value="xenon_view_sdk"/>
     <property name="test.dir" value="acceptance"/>
     <condition property="testToRun" value="-k ${test}" else="-v">
         <isset property="test"/>

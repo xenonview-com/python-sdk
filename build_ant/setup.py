@@ -4,6 +4,7 @@ Created on September 20, 2021
 @author: lwoydziak
 '''
 import pathlib
+
 from setuptools import setup, find_packages
 
 # The directory containing this file
@@ -12,8 +13,8 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
-setup(name='view-python-sdk',
-      version='0.0.4',
+setup(name='xenon-view-sdk',
+      version='0.0.5',
       maintainer='Luke Woydziak',
       maintainer_email='lwoydziak@gmail.com',
       url='https://github.com/xenonview-com/view-python-sdk',
@@ -31,7 +32,7 @@ setup(name='view-python-sdk',
           'Topic :: Software Development :: Libraries :: Python Modules'
       ],
       packages=find_packages(include=[
-          'view_python_sdk'
+          'xenon_view_sdk'
       ]),
       install_requires=[
           "singleton3",

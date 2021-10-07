@@ -1,17 +1,17 @@
-__title__ = 'view_python_sdk'
-__version__ = '0.0.4'
+__title__ = 'xenon_view_sdk'
+__version__ = '0.0.5'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
 Created on September 20, 2021
 @author: lwoydziak
 '''
-import requests
-
 from json import dumps
-from singleton3 import Singleton
-from requests.api import post
 from time import sleep
+
+import requests
+from requests.api import post
+from singleton3 import Singleton
 
 
 class ApiException(Exception):
@@ -21,7 +21,6 @@ class ApiException(Exception):
 
     def apiResponse(self):
         return self.__response
-
 
 
 class View(object, metaclass=Singleton):

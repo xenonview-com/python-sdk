@@ -8,7 +8,7 @@ from mockito.mockito import verify, when
 from pytest import raises
 from requests.exceptions import SSLError
 
-from view_python_sdk import View, ApiException
+from xenon_view_sdk import View, ApiException
 
 apiKey = '<apiKey>'
 apiUrl = '<apiUrl>'
