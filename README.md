@@ -1,6 +1,6 @@
 # xenon-view-sdk
 
-The Xenon View Python SDK is the Python SDL to interact with [XenonView](https://xenonview.com).
+The Xenon View Python SDK is the Python SDK to interact with [XenonView](https://xenonview.com).
 
 **Table of contents:**
 
@@ -11,7 +11,7 @@ The Xenon View Python SDK is the Python SDL to interact with [XenonView](https:/
 ## <a name="installation"></a>
 ## Installation
 
-You can install the View Python SDK from [PyPI](https://pypi.org/project/realpython-reader/):
+You can install the View Python SDK from [PyPI](https://pypi.org/project/xenon-view-sdk):
 
 ```bash
     pip install xenon-view-sdk
