@@ -53,7 +53,7 @@ def test_addSecondPageView():
     assert View().journey() == [
         {'action': 'p1', 'category': 'Page View'},
         {'action': 'p2','category': 'Page View'}
-        ]
+    ]
 
 def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View(apiKey='<API KEY>')
