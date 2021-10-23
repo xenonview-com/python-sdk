@@ -28,12 +28,14 @@ def test_viewJourneyAdded():
     response.status_code = 200
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().journey([{'step': 'step1'}], PostMethod=requests.post, sleepTime=0, verify=False)
+    View().event({'step': 'step1'})
+    View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests).post('https://<apiUrl>/journey',
-                          data=str('{"name": "ApiJourney", "parameters": '
-                                   '{"journey": [{"step": "step1"}]}}'),
+                          data=Contains('{"name": "ApiJourney", "parameters": '
+                                        '{"journey": [{"step": "step1"}], "uuid":'),
                           headers={'Authorization': 'Bearer <apiKey>'},
                           verify=False)
+    assert View().journey() == []
 
 
 def test_viewJourneyFailsWithOneSslError():
@@ -43,12 +45,14 @@ def test_viewJourneyFailsWithOneSslError():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenRaise(
         SSLError).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().journey([{'step': 'step1'}], PostMethod=requests.post, sleepTime=0, verify=False)
+    View().event({'step': 'step1'})
+    View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
-                                   data=str('{"name": "ApiJourney", "parameters": '
-                                            '{"journey": [{"step": "step1"}]}}'),
+                                   data=Contains('{"name": "ApiJourney", "parameters": '
+                                                 '{"journey": [{"step": "step1"}], "uuid":'),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
+    assert View().journey() == []
 
 
 def test_viewJourneyFailsWithOneError():
@@ -58,12 +62,14 @@ def test_viewJourneyFailsWithOneError():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenRaise(
         Exception).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().journey([{'step': 'step1'}], PostMethod=requests.post, sleepTime=0, verify=False)
+    View().event({'step': 'step1'})
+    View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
-                                   data=str('{"name": "ApiJourney", "parameters": '
-                                            '{"journey": [{"step": "step1"}]}}'),
+                                   data=Contains('{"name": "ApiJourney", "parameters": '
+                                                 '{"journey": [{"step": "step1"}], "uuid":'),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
+    assert View().journey() == []
 
 
 def test_viewJourneyFails():
@@ -73,9 +79,11 @@ def test_viewJourneyFails():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
     with raises(ApiException) as e:
-        View().journey({'step': 'step1'}, PostMethod=requests.post, sleepTime=0, verify=False)
+        View().event({'step': 'step1'})
+        View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
 
     assert Contains('Api responded with error.').matches(str(e.exconly()))
+    assert View().journey() == [{'step': 'step1'}]
 
 
 def test_WhenViewJourneyFailsExceptionContainsResponse():
@@ -85,6 +93,7 @@ def test_WhenViewJourneyFailsExceptionContainsResponse():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
     try:
-        View().journey({'step': 'step1'}, PostMethod=requests.post, sleepTime=0, verify=False)
+        View().event({'step': 'step1'})
+        View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     except ApiException as e:
         assert e.apiResponse().status_code == response.status_code
