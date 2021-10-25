@@ -34,17 +34,20 @@ def test_canAddPageView():
     View().pageView("mine")
     assert View().journey() == [{'category': 'Page View', 'action': 'mine'}]
 
+
 def test_doesNotAddDuplicateEvent():
     View(apiKey='<API KEY>')
-    View().event({'e1':'event1'})
-    View().event({'e1':'event1'})
+    View().event({'e1': 'event1'})
+    View().event({'e1': 'event1'})
     assert View().journey() == [{'e1': 'event1'}]
+
 
 def test_addSecondEvent():
     View(apiKey='<API KEY>')
-    View().event({'e1':'event1'})
-    View().event({'e2':'event2'})
-    assert View().journey() == [{'e1': 'event1'}, {'e2':'event2'}]
+    View().event({'e1': 'event1'})
+    View().event({'e2': 'event2'})
+    assert View().journey() == [{'e1': 'event1'}, {'e2': 'event2'}]
+
 
 def test_addSecondPageView():
     View(apiKey='<API KEY>')
@@ -52,13 +55,14 @@ def test_addSecondPageView():
     View().pageView('p2')
     assert View().journey() == [
         {'action': 'p1', 'category': 'Page View'},
-        {'action': 'p2','category': 'Page View'}
+        {'action': 'p2', 'category': 'Page View'}
     ]
+
 
 def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View(apiKey='<API KEY>')
-    View().event({'e1':'event1'})
+    View().event({'e1': 'event1'})
     View().reset()
-    View().event({'e2':'event2'})
+    View().event({'e2': 'event2'})
     View().restore()
-    assert View().journey() == [{'e1':'event1'},{'e2':'event2'}]
+    assert View().journey() == [{'e1': 'event1'}, {'e2': 'event2'}]
