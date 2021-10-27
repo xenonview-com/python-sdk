@@ -1,5 +1,5 @@
 __title__ = 'xenon_view_sdk'
-__version__ = '0.0.7'
+__version__ = '0.0.8'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
@@ -127,7 +127,7 @@ class View(object, metaclass=Singleton):
         headers = {"Authorization": "Bearer " + self.__apiKey}
         journeysApi = {
             "name": "ApiJourneys",
-            "parameters": {}
+            "parameters": {"uuid": self.__id}
         }
         response = None
         for _ in range(3):

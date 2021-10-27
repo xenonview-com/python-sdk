@@ -30,7 +30,7 @@ def test_ApiGetJourneys():
     when(response).json().thenReturn({'journeys': []})
     View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests).post('https://<apiUrl>/journeys',
-                          data=str('{"name": "ApiJourneys", "parameters": {}}'),
+                          data=Contains('{"name": "ApiJourneys", "parameters": {"uuid":'),
                           headers={'Authorization': 'Bearer <apiKey>'},
                           verify=False)
 
@@ -44,7 +44,7 @@ def test_ApiGetJourneysWithOneSslError():
     when(response).json().thenReturn({'journeys': []})
     View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journeys',
-                                   data=str('{"name": "ApiJourneys", "parameters": {}}'),
+                                   data=Contains('{"name": "ApiJourneys", "parameters": {"uuid":'),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
 
@@ -58,7 +58,7 @@ def test_ApiGetJourneysWithOneError():
     when(response).json().thenReturn({'journeys': []})
     View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journeys',
-                                   data=str('{"name": "ApiJourneys", "parameters": {}}'),
+                                   data=Contains('{"name": "ApiJourneys", "parameters": {"uuid":'),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
 
