@@ -14,7 +14,7 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(name='xenon-view-sdk',
-      version='0.0.8',
+      version='0.0.9',
       maintainer='Luke Woydziak',
       maintainer_email='lwoydziak@gmail.com',
       url='https://github.com/xenonview-com/view-python-sdk',
