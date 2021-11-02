@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.11 - Fully operational Outcome and Funnel methods
 * v0.0.7 - Fully operational deanonymization
 * v0.0.4 - User error handling supported
 * v0.0.2 - Basic Functionality
