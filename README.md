@@ -72,6 +72,34 @@ def test_addPageView():
 ```
 This adds a page view step to the journey chain.
 
+#### Funnel Stage
+You can use this method to track funnel stages in the journey.
+```python
+from xenon_view_sdk import View
+
+
+def test_canAddFunnelStage():
+    stage = "<stage in funnel>"
+    action = "<custom action>"
+    View(apiKey='<API KEY>')
+    View().funnel(stage, action)
+```
+This adds a funnel stage to the journey chain.
+
+#### Outcome
+You can use this method to add an outcome to the journey.
+```python
+from xenon_view_sdk import View
+
+
+def test_canAddOutcome():
+    outcome = "<outcome>"
+    action = "<custom action>"
+    View(apiKey='<API KEY>')
+    View().outcome(outcome, action)
+```
+This adds an outcome to the journey chain effectively completing it.
+
 
 #### Generic events
 You can use this method to add generic events to the journey:

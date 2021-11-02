@@ -35,6 +35,18 @@ def test_canAddPageView():
     assert View().journey() == [{'category': 'Page View', 'action': 'mine'}]
 
 
+def test_canAddOutcome():
+    View(apiKey='<API KEY>')
+    View().outcome("<my outcome>", "<action>" )
+    assert View().journey() == [{'outcome': '<my outcome>', 'action': '<action>'}]
+
+
+def test_canAddFunnel():
+    View(apiKey='<API KEY>')
+    View().funnel("<my step in funnel>", "<action>")
+    assert View().journey() == [{'funnel': '<my step in funnel>', 'action': '<action>'}]
+
+
 def test_doesNotAddDuplicateEvent():
     View(apiKey='<API KEY>')
     View().event({'e1': 'event1'})
@@ -57,7 +69,6 @@ def test_addSecondPageView():
         {'action': 'p1', 'category': 'Page View'},
         {'action': 'p2', 'category': 'Page View'}
     ]
-
 
 def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View(apiKey='<API KEY>')

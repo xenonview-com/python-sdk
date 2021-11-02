@@ -46,6 +46,20 @@ class View(object, metaclass=Singleton):
         }
         self.journeyAdd(content)
 
+    def outcome(self, outcome, action):
+        content = {
+            'outcome': outcome,
+            'action': action,
+        }
+        self.journeyAdd(content)
+
+    def funnel(self, funnelStep, action):
+        content = {
+            'funnel': funnelStep,
+            'action': action,
+        }
+        self.journeyAdd(content)
+
     def event(self, event):
         self.journeyAdd(event)
 
