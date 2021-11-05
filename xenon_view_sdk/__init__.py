@@ -63,6 +63,11 @@ class View(object, metaclass=Singleton):
     def event(self, event):
         self.journeyAdd(event)
 
+    def id(self, id=None):
+        if id:
+            self.__id = id
+        return self.__id
+
     def journeyAdd(self, content):
         journey = self.journey()
         if journey and len(journey) > 0:

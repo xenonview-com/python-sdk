@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.12 - Can get and set a Journey ID
 * v0.0.11 - Fully operational Outcome and Funnel methods
 * v0.0.7 - Fully operational deanonymization
 * v0.0.4 - User error handling supported
@@ -165,6 +166,22 @@ from xenon_view_sdk import View
 def test_viewJourneys():
     View('<API KEY>')
     print(str(View().journeys()))
+```
+
+### Journey IDs
+Each Journey has an ID akin to a session. After an Outcome occurs the ID remains the same to link all the Journeys. If you have a previous Journey in progress and would like to append to that, you can set the ID.
+
+After you have initialized the View singleton, you can view or set the Journey (Session) ID: 
+
+```python
+from xenon_view_sdk import View
+
+
+def test_viewJourneys():
+    View('<API KEY>')
+    print(str(View().id()))
+    View().id('<reuse previous ID>')
+    assert View().id() == '<reuse previous ID>'
 ```
 
 ### Error handling

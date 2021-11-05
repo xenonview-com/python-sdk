@@ -37,7 +37,7 @@ def test_canAddPageView():
 
 def test_canAddOutcome():
     View(apiKey='<API KEY>')
-    View().outcome("<my outcome>", "<action>" )
+    View().outcome("<my outcome>", "<action>")
     assert View().journey() == [{'outcome': '<my outcome>', 'action': '<action>'}]
 
 
@@ -70,6 +70,7 @@ def test_addSecondPageView():
         {'action': 'p2', 'category': 'Page View'}
     ]
 
+
 def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View(apiKey='<API KEY>')
     View().event({'e1': 'event1'})
@@ -77,3 +78,10 @@ def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View().event({'e2': 'event2'})
     View().restore()
     assert View().journey() == [{'e1': 'event1'}, {'e2': 'event2'}]
+
+
+def test_canGetAndSetId():
+    View(apiKey='<API KEY>')
+    assert View().id() != None and View().id() != ''
+    View().id('test')
+    assert View().id() == 'test'
