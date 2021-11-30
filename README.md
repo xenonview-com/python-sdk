@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.14 - Timestamp on commit
 * v0.0.13 - Timestamps on every addition
 * v0.0.12 - Can get and set a Journey ID
 * v0.0.11 - Fully operational Outcome and Funnel methods

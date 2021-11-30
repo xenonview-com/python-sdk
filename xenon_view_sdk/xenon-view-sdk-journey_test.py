@@ -2,7 +2,9 @@
 Created on September 20, 2021
 @author: lwoydziak
 '''
-from mockito.matchers import any, Contains, And
+from json import loads
+
+from mockito.matchers import any, Contains, And, ArgThat, Eq
 from mockito.mocking import mock
 from mockito.mockito import verify, when
 from pytest import raises
@@ -30,10 +32,19 @@ def test_viewJourneyAdded():
     when(response).json().thenReturn({'result': 'success'})
     View().event({'step': 'step1'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+
+    def matchesJourneyApiParameters(arg):
+        apiArguments = loads(arg)
+        parameters = apiArguments['parameters']
+        assert Eq("ApiJourney").matches(apiArguments['name'])
+        assert Eq('step1').matches(parameters['journey'][0]['step'])
+        assert any(float).matches(parameters['journey'][0]['timestamp'])
+        assert any(str).matches(parameters['uuid'])
+        assert any(float).matches(parameters['timestamp'])
+        return True
+
     verify(requests).post('https://<apiUrl>/journey',
-                          data=And([Contains('{"name": "ApiJourney", "parameters": '),
-                                    Contains('{"journey": [{"step": "step1", "timestamp":'),
-                                    Contains('}], "uuid":')]),
+                          data=ArgThat(matchesJourneyApiParameters),
                           headers={'Authorization': 'Bearer <apiKey>'},
                           verify=False)
     assert View().journey() == []

@@ -93,7 +93,8 @@ class View(object, metaclass=Singleton):
             "name": "ApiJourney",
             "parameters": {
                 "journey": self.journey(),
-                "uuid": self.__id
+                "uuid": self.__id,
+                "timestamp": datetime.now(utc).timestamp()
             }
         }
         response = None
