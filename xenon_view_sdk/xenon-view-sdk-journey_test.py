@@ -2,7 +2,7 @@
 Created on September 20, 2021
 @author: lwoydziak
 '''
-from mockito.matchers import any, Contains
+from mockito.matchers import any, Contains, And
 from mockito.mocking import mock
 from mockito.mockito import verify, when
 from pytest import raises
@@ -31,8 +31,9 @@ def test_viewJourneyAdded():
     View().event({'step': 'step1'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests).post('https://<apiUrl>/journey',
-                          data=Contains('{"name": "ApiJourney", "parameters": '
-                                        '{"journey": [{"step": "step1"}], "uuid":'),
+                          data=And([Contains('{"name": "ApiJourney", "parameters": '),
+                                    Contains('{"journey": [{"step": "step1", "timestamp":'),
+                                    Contains('}], "uuid":')]),
                           headers={'Authorization': 'Bearer <apiKey>'},
                           verify=False)
     assert View().journey() == []
@@ -48,8 +49,9 @@ def test_viewJourneyFailsWithOneSslError():
     View().event({'step': 'step1'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
-                                   data=Contains('{"name": "ApiJourney", "parameters": '
-                                                 '{"journey": [{"step": "step1"}], "uuid":'),
+                                   data=And([Contains('{"name": "ApiJourney", "parameters": '),
+                                             Contains('{"journey": [{"step": "step1", "timestamp":'),
+                                             Contains('}], "uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
     assert View().journey() == []
@@ -65,8 +67,9 @@ def test_viewJourneyFailsWithOneError():
     View().event({'step': 'step1'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
-                                   data=Contains('{"name": "ApiJourney", "parameters": '
-                                                 '{"journey": [{"step": "step1"}], "uuid":'),
+                                   data=And([Contains('{"name": "ApiJourney", "parameters": '),
+                                             Contains('{"journey": [{"step": "step1", "timestamp":'),
+                                             Contains('}], "uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
     assert View().journey() == []
@@ -83,7 +86,9 @@ def test_viewJourneyFails():
         View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
 
     assert Contains('Api responded with error.').matches(str(e.exconly()))
-    assert View().journey() == [{'step': 'step1'}]
+    journey = View().journey()[0]
+    assert journey['step'] == 'step1'
+    assert journey['timestamp'] > 0.0
 
 
 def test_WhenViewJourneyFailsExceptionContainsResponse():

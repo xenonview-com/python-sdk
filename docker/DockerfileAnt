@@ -16,6 +16,7 @@ RUN pip3 install twine
 ########### - view-python-sdk dependencies:
 RUN pip3 install singleton3
 RUN pip3 install requests
+RUN pip3 install pytz
 ########### - view-python-sdk dependencies  - end
 
 ENTRYPOINT ["/data/ant.sh"]

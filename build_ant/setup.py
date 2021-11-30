@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 HERE = pathlib.Path(__file__).parent
 
 # The text of the README file
-README = (HERE / "README.md").read_text()
+README = (HERE / 'README.md').read_text()
 
 setup(name='xenon-view-sdk',
       version='0.0.12',
@@ -19,10 +19,10 @@ setup(name='xenon-view-sdk',
       maintainer_email='lwoydziak@gmail.com',
       url='https://github.com/xenonview-com/view-python-sdk',
       download_url='https://github.com/xenonview-com/view-python-sdk/tarball/1.0',
-      platforms=["any"],
+      platforms=['any'],
       description='Python access to Xenon View.',
       long_description=README,
-      long_description_content_type="text/markdown",
+      long_description_content_type='text/markdown',
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Natural Language :: English',
@@ -35,8 +35,9 @@ setup(name='xenon-view-sdk',
           'xenon_view_sdk'
       ]),
       install_requires=[
-          "singleton3",
-          "requests"
+          'singleton3',
+          'requests',
+          'pytz'
       ],
       python_requires='>=3',
 

@@ -9,6 +9,8 @@ Created on September 20, 2021
 from json import dumps
 from time import sleep
 from uuid import uuid4
+from datetime import datetime
+from pytz import utc
 
 import requests
 from requests.api import post
@@ -70,6 +72,7 @@ class View(object, metaclass=Singleton):
 
     def journeyAdd(self, content):
         journey = self.journey()
+        content['timestamp'] = datetime.now(utc).timestamp()
         if journey and len(journey) > 0:
             last = journey[-1]
             if last.keys() == content.keys():
@@ -120,7 +123,8 @@ class View(object, metaclass=Singleton):
             "name": "ApiDeanonymize",
             "parameters": {
                 "person": person,
-                "uuid": self.__id
+                "uuid": self.__id,
+                "timestamp": datetime.now(utc).timestamp()
             }
         }
         response = None

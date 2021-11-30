@@ -28,47 +28,66 @@ def test_canChangeViewApiKey():
     View().key(newApiKey)
     assert newApiKey == View().key()
 
-
 def test_canAddPageView():
     View(apiKey='<API KEY>')
     View().pageView("mine")
-    assert View().journey() == [{'category': 'Page View', 'action': 'mine'}]
+    journey = View().journey()[0]
+    assert journey['category'] == 'Page View'
+    assert journey['action'] == 'mine'
+    assert journey['timestamp'] > 0.0
+
 
 
 def test_canAddOutcome():
     View(apiKey='<API KEY>')
     View().outcome("<my outcome>", "<action>")
-    assert View().journey() == [{'outcome': '<my outcome>', 'action': '<action>'}]
-
+    journey = View().journey()[0]
+    assert journey['outcome'] == '<my outcome>'
+    assert journey['action'] == '<action>'
+    assert journey['timestamp'] > 0.0
 
 def test_canAddFunnel():
     View(apiKey='<API KEY>')
     View().funnel("<my step in funnel>", "<action>")
-    assert View().journey() == [{'funnel': '<my step in funnel>', 'action': '<action>'}]
+    journey = View().journey()[0]
+    assert journey['funnel'] == '<my step in funnel>'
+    assert journey['action'] == '<action>'
+    assert journey['timestamp'] > 0.0
 
 
 def test_doesNotAddDuplicateEvent():
     View(apiKey='<API KEY>')
     View().event({'e1': 'event1'})
     View().event({'e1': 'event1'})
-    assert View().journey() == [{'e1': 'event1'}]
-
+    journey = View().journey()[0]
+    assert journey['e1'] == 'event1'
+    assert journey['timestamp'] > 0.0
 
 def test_addSecondEvent():
     View(apiKey='<API KEY>')
     View().event({'e1': 'event1'})
     View().event({'e2': 'event2'})
-    assert View().journey() == [{'e1': 'event1'}, {'e2': 'event2'}]
+    journey = View().journey()[0]
+    assert journey['e1'] == 'event1'
+    assert journey['timestamp'] > 0.0
+    journey = View().journey()[1]
+    assert journey['e2'] == 'event2'
+    assert journey['timestamp'] > 0.0
 
 
 def test_addSecondPageView():
     View(apiKey='<API KEY>')
     View().pageView('p1')
     View().pageView('p2')
-    assert View().journey() == [
-        {'action': 'p1', 'category': 'Page View'},
-        {'action': 'p2', 'category': 'Page View'}
-    ]
+
+    journey = View().journey()[0]
+    assert journey['category'] == 'Page View'
+    assert journey['action'] == 'p1'
+    assert journey['timestamp'] > 0.0
+    journey = View().journey()[1]
+    assert journey['category'] == 'Page View'
+    assert journey['action'] == 'p2'
+    assert journey['timestamp'] > 0.0
 
 
 def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
@@ -77,7 +96,12 @@ def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View().reset()
     View().event({'e2': 'event2'})
     View().restore()
-    assert View().journey() == [{'e1': 'event1'}, {'e2': 'event2'}]
+    journey = View().journey()[0]
+    assert journey['e1'] == 'event1'
+    assert journey['timestamp'] > 0.0
+    journey = View().journey()[1]
+    assert journey['e2'] == 'event2'
+    assert journey['timestamp'] > 0.0
 
 
 def test_canGetAndSetId():

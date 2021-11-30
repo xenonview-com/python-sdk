@@ -2,7 +2,7 @@
 Created on October 22, 2021
 @author: lwoydziak
 '''
-from mockito.matchers import any, Contains
+from mockito.matchers import any, Contains, And
 from mockito.mocking import mock
 from mockito.mockito import verify, when
 from pytest import raises
@@ -30,7 +30,10 @@ def test_ApiDeanonymize():
     when(response).json().thenReturn({'deanonymize': []})
     View().deanonymize("test", PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests).post('https://<apiUrl>/deanonymize',
-                          data=Contains('{"name": "ApiDeanonymize", "parameters": {"person": "test", "uuid":'),
+                          data=And([Contains('{"name": "ApiDeanonymize", "parameters": {'),
+                                    Contains('"person": "test",'),
+                                    Contains('"timestamp":'),
+                                    Contains('"uuid":')]),
                           headers={'Authorization': 'Bearer <apiKey>'},
                           verify=False)
 
@@ -44,7 +47,10 @@ def test_ApiDeanonymizeWithOneSslError():
     when(response).json().thenReturn({'deanonymize': []})
     View().deanonymize("test", PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/deanonymize',
-                                   data=Contains('{"name": "ApiDeanonymize", "parameters": {"person": "test", "uuid":'),
+                                   data=And([Contains('{"name": "ApiDeanonymize", "parameters": {'),
+                                             Contains('"person": "test",'),
+                                             Contains('"timestamp":'),
+                                             Contains('"uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
 
@@ -58,7 +64,10 @@ def test_ApiDeanonymizeWithOneError():
     when(response).json().thenReturn({'deanonymize': []})
     View().deanonymize("test", PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/deanonymize',
-                                   data=Contains('{"name": "ApiDeanonymize", "parameters": {"person": "test", "uuid":'),
+                                   data=And([Contains('{"name": "ApiDeanonymize", "parameters": {'),
+                                             Contains('"person": "test",'),
+                                             Contains('"timestamp":'),
+                                             Contains('"uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
 
