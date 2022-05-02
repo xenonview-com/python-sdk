@@ -63,6 +63,11 @@ class View(object, metaclass=Singleton):
         self.journeyAdd(content)
 
     def event(self, event):
+        keys = event.keys()
+        if 'action' not in keys:
+            event = {'action': event}
+        if 'category' not in keys:
+            event['category'] = 'Event'
         self.journeyAdd(event)
 
     def id(self, id=None):

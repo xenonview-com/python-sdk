@@ -57,21 +57,38 @@ def test_canAddFunnel():
 
 def test_doesNotAddDuplicateEvent():
     View(apiKey='<API KEY>')
-    View().event({'e1': 'event1'})
-    View().event({'e1': 'event1'})
+    View().event({'category': 'Event1', 'action': 'test'})
+    View().event({'category': 'Event1', 'action': 'test'})
     journey = View().journey()[0]
-    assert journey['e1'] == 'event1'
+    assert journey['category'] == 'Event1'
     assert journey['timestamp'] > 0.0
+    assert len(View().journey()) == 1
 
 def test_addSecondEvent():
     View(apiKey='<API KEY>')
-    View().event({'e1': 'event1'})
-    View().event({'e2': 'event2'})
+    View().event({'category': 'Event1', 'action': 'test1'})
+    View().event({'category': 'Event2', 'action': 'test2', 'extra': 'value'})
     journey = View().journey()[0]
-    assert journey['e1'] == 'event1'
+    assert journey['category'] == 'Event1'
     assert journey['timestamp'] > 0.0
     journey = View().journey()[1]
-    assert journey['e2'] == 'event2'
+    assert journey['category'] == 'Event2'
+    assert journey['timestamp'] > 0.0
+
+def test_addCustomEvent():
+    View(apiKey='<API KEY>')
+    View().event({'custom': 'test'})
+    journey = View().journey()[0]
+    assert journey['category'] == 'Event'
+    assert journey['action'] == {'custom': 'test'}
+    assert journey['timestamp'] > 0.0
+
+def test_addGenericEvent():
+    View(apiKey='<API KEY>')
+    View().event({'action': 'test'})
+    journey = View().journey()[0]
+    assert journey['category'] == 'Event'
+    assert journey['action'] == 'test'
     assert journey['timestamp'] > 0.0
 
 
@@ -92,15 +109,15 @@ def test_addSecondPageView():
 
 def test_whenResetingAddingEventAndRestoringRestoredJourneyHasNewEvent():
     View(apiKey='<API KEY>')
-    View().event({'e1': 'event1'})
+    View().event({'category': 'Event1', 'action': 'test'})
     View().reset()
-    View().event({'e2': 'event2'})
+    View().event({'category': 'Event2', 'action': 'test2'})
     View().restore()
     journey = View().journey()[0]
-    assert journey['e1'] == 'event1'
+    assert journey['category'] == 'Event1'
     assert journey['timestamp'] > 0.0
     journey = View().journey()[1]
-    assert journey['e2'] == 'event2'
+    assert journey['category'] == 'Event2'
     assert journey['timestamp'] > 0.0
 
 

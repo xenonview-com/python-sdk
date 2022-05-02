@@ -30,14 +30,14 @@ def test_viewJourneyAdded():
     response.status_code = 200
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().event({'step': 'step1'})
+    View().event({'category': 'Event1', 'action': 'test'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
 
     def matchesJourneyApiParameters(arg):
         apiArguments = loads(arg)
         parameters = apiArguments['parameters']
         assert Eq("ApiJourney").matches(apiArguments['name'])
-        assert Eq('step1').matches(parameters['journey'][0]['step'])
+        assert Eq('Event1').matches(parameters['journey'][0]['category'])
         assert any(float).matches(parameters['journey'][0]['timestamp'])
         assert any(str).matches(parameters['uuid'])
         assert any(float).matches(parameters['timestamp'])
@@ -57,11 +57,11 @@ def test_viewJourneyFailsWithOneSslError():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenRaise(
         SSLError).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().event({'step': 'step1'})
+    View().event({'category': 'Event1', 'action': 'test'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
                                    data=And([Contains('{"name": "ApiJourney", "parameters": '),
-                                             Contains('{"journey": [{"step": "step1", "timestamp":'),
+                                             Contains('{"journey": [{"category": "Event1", "action": "test", "timestamp":'),
                                              Contains('}], "uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
@@ -75,11 +75,11 @@ def test_viewJourneyFailsWithOneError():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenRaise(
         Exception).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().event({'step': 'step1'})
+    View().event({'category': 'Event1', 'action': 'test'})
     View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
                                    data=And([Contains('{"name": "ApiJourney", "parameters": '),
-                                             Contains('{"journey": [{"step": "step1", "timestamp":'),
+                                             Contains('{"journey": [{"category": "Event1", "action": "test", "timestamp":'),
                                              Contains('}], "uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
@@ -93,12 +93,12 @@ def test_viewJourneyFails():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
     with raises(ApiException) as e:
-        View().event({'step': 'step1'})
+        View().event({'category': 'Event1', 'action': 'test'})
         View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
 
     assert Contains('Api responded with error.').matches(str(e.exconly()))
     journey = View().journey()[0]
-    assert journey['step'] == 'step1'
+    assert journey['action'] == 'test'
     assert journey['timestamp'] > 0.0
 
 
