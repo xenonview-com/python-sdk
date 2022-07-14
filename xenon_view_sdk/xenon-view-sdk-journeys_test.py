@@ -8,18 +8,18 @@ from mockito.mockito import verify, when
 from pytest import raises
 from requests.exceptions import SSLError
 
-from xenon_view_sdk import View, ApiException
+from xenon_view_sdk import Xenon, ApiException
 
 apiKey = '<apiKey>'
 apiUrl = '<apiUrl>'
 
 
 def setup_function(function):
-    View(apiKey=apiKey, apiUrl=apiUrl)
+    Xenon(apiKey=apiKey, apiUrl=apiUrl)
 
 
 def teardown_function(function):
-    View._instance = None
+    Xenon._instance = None
 
 
 def test_ApiGetJourneys():
@@ -28,7 +28,7 @@ def test_ApiGetJourneys():
     response.status_code = 200
     when(requests).post('https://<apiUrl>/journeys', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'journeys': []})
-    View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
+    Xenon().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests).post('https://<apiUrl>/journeys',
                           data=Contains('{"name": "ApiJourneys", "parameters": {"uuid":'),
                           headers={'Authorization': 'Bearer <apiKey>'},
@@ -42,7 +42,7 @@ def test_ApiGetJourneysWithOneSslError():
     when(requests).post('https://<apiUrl>/journeys', data=any(), headers=any(), verify=False).thenRaise(
         SSLError).thenReturn(response)
     when(response).json().thenReturn({'journeys': []})
-    View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
+    Xenon().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journeys',
                                    data=Contains('{"name": "ApiJourneys", "parameters": {"uuid":'),
                                    headers={'Authorization': 'Bearer <apiKey>'},
@@ -56,7 +56,7 @@ def test_ApiGetJourneysWithOneError():
     when(requests).post('https://<apiUrl>/journeys', data=any(), headers=any(), verify=False).thenRaise(
         Exception).thenReturn(response)
     when(response).json().thenReturn({'journeys': []})
-    View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
+    Xenon().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journeys',
                                    data=Contains('{"name": "ApiJourneys", "parameters": {"uuid":'),
                                    headers={'Authorization': 'Bearer <apiKey>'},
@@ -70,6 +70,6 @@ def test_ApiGetJourneysFails():
     when(requests).post('https://<apiUrl>/journeys', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
     with raises(ApiException) as e:
-        View().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
+        Xenon().journeys(PostMethod=requests.post, sleepTime=0, verify=False)
 
     assert Contains('Api responded with error.').matches(str(e.exconly()))

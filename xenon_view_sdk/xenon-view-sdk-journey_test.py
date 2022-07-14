@@ -10,18 +10,18 @@ from mockito.mockito import verify, when
 from pytest import raises
 from requests.exceptions import SSLError
 
-from xenon_view_sdk import View, ApiException
+from xenon_view_sdk import Xenon, ApiException
 
 apiKey = '<apiKey>'
 apiUrl = '<apiUrl>'
 
 
 def setup_function(function):
-    View(apiKey=apiKey, apiUrl=apiUrl)
+    Xenon(apiKey=apiKey, apiUrl=apiUrl)
 
 
 def teardown_function(function):
-    View._instance = None
+    Xenon._instance = None
 
 
 def test_viewJourneyAdded():
@@ -30,8 +30,8 @@ def test_viewJourneyAdded():
     response.status_code = 200
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().event({'category': 'Event1', 'action': 'test'})
-    View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+    Xenon().event({'category': 'Event1', 'action': 'test'})
+    Xenon().commit(PostMethod=requests.post, sleepTime=0, verify=False)
 
     def matchesJourneyApiParameters(arg):
         apiArguments = loads(arg)
@@ -47,7 +47,7 @@ def test_viewJourneyAdded():
                           data=ArgThat(matchesJourneyApiParameters),
                           headers={'Authorization': 'Bearer <apiKey>'},
                           verify=False)
-    assert View().journey() == []
+    assert Xenon().journey() == []
 
 
 def test_viewJourneyFailsWithOneSslError():
@@ -57,15 +57,15 @@ def test_viewJourneyFailsWithOneSslError():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenRaise(
         SSLError).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().event({'category': 'Event1', 'action': 'test'})
-    View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+    Xenon().event({'category': 'Event1', 'action': 'test'})
+    Xenon().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
                                    data=And([Contains('{"name": "ApiJourney", "parameters": '),
                                              Contains('{"journey": [{"category": "Event1", "action": "test", "timestamp":'),
                                              Contains('}], "uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
-    assert View().journey() == []
+    assert Xenon().journey() == []
 
 
 def test_viewJourneyFailsWithOneError():
@@ -75,15 +75,15 @@ def test_viewJourneyFailsWithOneError():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenRaise(
         Exception).thenReturn(response)
     when(response).json().thenReturn({'result': 'success'})
-    View().event({'category': 'Event1', 'action': 'test'})
-    View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+    Xenon().event({'category': 'Event1', 'action': 'test'})
+    Xenon().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     verify(requests, times=2).post('https://<apiUrl>/journey',
                                    data=And([Contains('{"name": "ApiJourney", "parameters": '),
                                              Contains('{"journey": [{"category": "Event1", "action": "test", "timestamp":'),
                                              Contains('}], "uuid":')]),
                                    headers={'Authorization': 'Bearer <apiKey>'},
                                    verify=False)
-    assert View().journey() == []
+    assert Xenon().journey() == []
 
 
 def test_viewJourneyFails():
@@ -93,11 +93,11 @@ def test_viewJourneyFails():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
     with raises(ApiException) as e:
-        View().event({'category': 'Event1', 'action': 'test'})
-        View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+        Xenon().event({'category': 'Event1', 'action': 'test'})
+        Xenon().commit(PostMethod=requests.post, sleepTime=0, verify=False)
 
     assert Contains('Api responded with error.').matches(str(e.exconly()))
-    journey = View().journey()[0]
+    journey = Xenon().journey()[0]
     assert journey['action'] == 'test'
     assert journey['timestamp'] > 0.0
 
@@ -109,7 +109,7 @@ def test_WhenViewJourneyFailsExceptionContainsResponse():
     when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
     when(response).json().thenReturn({'result': 'failed'})
     try:
-        View().event({'step': 'step1'})
-        View().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+        Xenon().event({'step': 'step1'})
+        Xenon().commit(PostMethod=requests.post, sleepTime=0, verify=False)
     except ApiException as e:
         assert e.apiResponse().status_code == response.status_code

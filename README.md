@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.16 - Rename View to Xenon
 * v0.0.15 - Event adding follows standard
 * v0.0.14 - Timestamp on commit
 * v0.0.13 - Timestamps on every addition
@@ -39,152 +40,129 @@ The Xenon View SDK can be used in your application to provide a whole new level 
 The View SDK is a Python module you'll need to include in your application. After inclusion, you'll need to instantiate the singleton object:
 
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
-
-def test_createView():
-    View('<API KEY>')
+# start by initializing Xenon View
+Xenon('<API KEY>')
 ```
-Of course, you'll have to make the following modifications to the above code:
-- Replace `<API KEY>` with your [api key](https://xenonview.com/api-get)
 
-Optionally you can set the API Key later:
+-OR-
 
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
-
-def test_createView():
-    View('TBD')
-    View().key('<API KEY>')
+# to initialize Xenon View after construction
+Xenon('TBD')
+Xenon().key('<API KEY>')
 ```
+
+Of course, you'll have to make the following modifications to the above code:
+- Replace `<API KEY>` with your [api key](https://xenonview.com/api-get)
 
 ### Add Journeys
 After you have initialized the View singleton, you can start collecting journeys.
 
 There are a few helper methods you can use:
+#### Outcome
+You can use this method to add an outcome to the journey.
+
+```python
+from xenon_view_sdk import Xenon
+
+# you can add an outcome to journey
+outcome = "<outcome>"
+action = "<custom action>"
+Xenon().outcome(outcome, action)
+```
+This adds an outcome to the journey chain effectively completing it.
+
 
 #### Page view
 You can use this method to add page views to the journey.
+
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
-
-def test_addPageView():
-    page = 'test/page'
-    View('<API KEY>')
-    View().pageView(page)
+# you can add a page xenon to a journey
+page = 'test/page'
+Xenon().pageView(page)
 ```
 This adds a page view step to the journey chain.
 
 #### Funnel Stage
 You can use this method to track funnel stages in the journey.
+
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
-
-def test_canAddFunnelStage():
-    stage = "<stage in funnel>"
-    action = "<custom action>"
-    View(apiKey='<API KEY>')
-    View().funnel(stage, action)
+# you can add a funnel stage to a journey
+action = "<custom action>"
+stage = "<stage in funnel>"
+Xenon().funnel(stage, action)
 ```
 This adds a funnel stage to the journey chain.
-
-#### Outcome
-You can use this method to add an outcome to the journey.
-```python
-from xenon_view_sdk import View
-
-
-def test_canAddOutcome():
-    outcome = "<outcome>"
-    action = "<custom action>"
-    View(apiKey='<API KEY>')
-    View().outcome(outcome, action)
-```
-This adds an outcome to the journey chain effectively completing it.
-
 
 #### Generic events
 You can use this method to add generic events to the journey:
 
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
-
-def test_addEvent():
-    email = 'test@test.com'
-    View('<API KEY>')
-    View().event({
-            'category': 'Submit',
-            'action': 'Submit (/sign-up) email: ' + email,
-            'label': 'submit-email'
-        })
+# you can add a generic event to journey
+event =  {
+    'category': 'Event',
+    'action': 'test'
+}   
+Xenon().event(event)
 ```
 This adds an event step to the journey chain.
 
 ### Committing Journeys
 
 Journeys only exist locally until you commit them to the Xenon View system. After you have created and added to a journey, you can commit the journey to Xenon View for analysis as follows:
+
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
-
-def test_commitJourney():
-    email = 'test@test.com'
-    View('<API KEY>')
-    # <add some steps in the journey>
-    # commit
-    View().commit()
+# you can commit a journey to Xenon View
+Xenon().commit()
 ```
 This commits a journey to Xenon View for analysis.
 
 ### Deanonymizing Journeys
 
 Xenon View supports both anonymous and known journeys. By deanonymizing a journey you can compare a user's path to other known paths and gather insights into their progress. This is optional.
+
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
 
 def test_commitJourney():
-    name = 'Python Testing'
-    email = 'pytest@example.com'
-    View('<API KEY>')
-    # <add some steps in the journey>
-    # <commit>
-    # you can deanonymize before or after you have committed journey (in this case after):
-    View().deanonymize({'name': name, 'email':email})
+person = {
+    'name': 'Python Testing',
+    'email': 'pytest@example.com'
+}
+# you can deanonymize before or after you have committed journey (in this case after):
+Xenon().deanonymize(person)
 ```
 This deanonymizes every journey committed to a particular user.
 
 
-### View Journeys
-After you have initialized the View singleton, you can also view journeys:
-
-```python
-from xenon_view_sdk import View
-
-
-def test_viewJourneys():
-    View('<API KEY>')
-    print(str(View().journeys()))
-```
-
 ### Journey IDs
 Each Journey has an ID akin to a session. After an Outcome occurs the ID remains the same to link all the Journeys. If you have a previous Journey in progress and would like to append to that, you can set the ID.
 
-After you have initialized the View singleton, you can view or set the Journey (Session) ID: 
+After you have initialized the View singleton, you can view or set the Journey (Session) ID:
 
 ```python
-from xenon_view_sdk import View
+from xenon_view_sdk import Xenon
 
+# by default has Journey id
+print(str(Xenon().id()))
 
-def test_viewJourneys():
-    View('<API KEY>')
-    print(str(View().id()))
-    View().id('<reuse previous ID>')
-    assert View().id() == '<reuse previous ID>'
+# you can also set the id
+testId = '<reuse previous ID>'
+Xenon().id(testId)
+assert Xenon().id() == testId
 ```
 
 ### Error handling
@@ -193,12 +171,12 @@ In the event of an API error, an exception will be raised with the response from
 Note: The default handling of this situation will restore the journey (appending newly added pageViews, events, etc.) for future committing. If you want to do something special, you can do so like this:
 
 ```python
-from xenon_view_sdk import View, ApiException
+from xenon_view_sdk import Xenon, ApiException
 
 try:
-    View().event({'step': 'a step in the journey'})
-    View().commit()
-    
+    Xenon().event({'step': 'a step in the journey'})
+    Xenon().commit()
+
 except ApiException as e:
     print(str(e.apiResponse().status_code))
 ```

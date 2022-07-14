@@ -26,10 +26,10 @@ class ApiException(Exception):
         return self.__response
 
 
-class View(object, metaclass=Singleton):
+class Xenon(object, metaclass=Singleton):
     def __init__(self, apiKey=None, uuid=None, apiUrl='app.xenonview.com'):
         if not apiKey:
-            raise ValueError('View should be initialized with an API Key from Xenon.')
+            raise ValueError('Xenon should be initialized with an API Key from XenonView.')
         self.__apiKey = apiKey
         self.__apiUrl = apiUrl
         self.__journey = []
