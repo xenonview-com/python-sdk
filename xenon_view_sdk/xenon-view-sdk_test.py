@@ -28,6 +28,7 @@ def test_canChangeViewApiKey():
     Xenon().key(newApiKey)
     assert newApiKey == Xenon().key()
 
+
 def test_canAddPageView():
     Xenon(apiKey='<API KEY>')
     Xenon().pageView("mine")
@@ -37,7 +38,6 @@ def test_canAddPageView():
     assert journey['timestamp'] > 0.0
 
 
-
 def test_canAddOutcome():
     Xenon(apiKey='<API KEY>')
     Xenon().outcome("<my outcome>", "<action>")
@@ -45,6 +45,7 @@ def test_canAddOutcome():
     assert journey['outcome'] == '<my outcome>'
     assert journey['action'] == '<action>'
     assert journey['timestamp'] > 0.0
+
 
 def test_canAddFunnel():
     Xenon(apiKey='<API KEY>')
@@ -62,7 +63,9 @@ def test_doesNotAddDuplicateEvent():
     journey = Xenon().journey()[0]
     assert journey['category'] == 'Event1'
     assert journey['timestamp'] > 0.0
+    assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
+
 
 def test_addSecondEvent():
     Xenon(apiKey='<API KEY>')
@@ -75,6 +78,19 @@ def test_addSecondEvent():
     assert journey['category'] == 'Event2'
     assert journey['timestamp'] > 0.0
 
+
+def test_addEventAndOutcome():
+    Xenon(apiKey='<API KEY>')
+    Xenon().event({'category': 'Event1', 'action': 'test1'})
+    Xenon().outcome('Event2', 'test2')
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Event1'
+    assert journey['timestamp'] > 0.0
+    journey = Xenon().journey()[1]
+    assert journey['outcome'] == 'Event2'
+    assert journey['timestamp'] > 0.0
+
+
 def test_addCustomEvent():
     Xenon(apiKey='<API KEY>')
     Xenon().event({'custom': 'test'})
@@ -82,6 +98,7 @@ def test_addCustomEvent():
     assert journey['category'] == 'Event'
     assert journey['action'] == {'custom': 'test'}
     assert journey['timestamp'] > 0.0
+
 
 def test_addGenericEvent():
     Xenon(apiKey='<API KEY>')

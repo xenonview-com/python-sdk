@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.17 - Count duplicate steps instead of dropping them
 * v0.0.16 - Rename View to Xenon
 * v0.0.15 - Event adding follows standard
 * v0.0.14 - Timestamp on commit
@@ -83,7 +84,7 @@ You can use this method to add page views to the journey.
 ```python
 from xenon_view_sdk import Xenon
 
-# you can add a page xenon to a journey
+# you can add a page view to a journey
 page = 'test/page'
 Xenon().pageView(page)
 ```

@@ -6,13 +6,13 @@ __copyright__ = 'Copyright 2021 Xenon'
 Created on September 20, 2021
 @author: lwoydziak
 '''
+from datetime import datetime
 from json import dumps
 from time import sleep
 from uuid import uuid4
-from datetime import datetime
-from pytz import utc
 
 import requests
+from pytz import utc
 from requests.api import post
 from singleton3 import Singleton
 
@@ -80,11 +80,17 @@ class Xenon(object, metaclass=Singleton):
         content['timestamp'] = datetime.now(utc).timestamp()
         if journey and len(journey) > 0:
             last = journey[-1]
-            if last.keys() == content.keys():
-                if 'action' in last.keys() and \
-                   'action' in content.keys() and \
-                   last['action'] != content['action']:
+            lastKeys = last.keys()
+            contentKeys = content.keys()
+            if ("funnel" in lastKeys and "funnel" in contentKeys) or (
+                    "category" in lastKeys and "category" in contentKeys):
+                if 'action' in lastKeys and \
+                        'action' in contentKeys and \
+                        last['action'] != content['action']:
                     journey.append(content)
+                else:
+                    count = last['count'] if 'count' in lastKeys else 1
+                    last['count'] = count + 1
             else:
                 journey.append(content)
         else:
