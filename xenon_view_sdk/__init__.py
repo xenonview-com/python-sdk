@@ -32,6 +32,7 @@ class Xenon(object, metaclass=Singleton):
             raise ValueError('Xenon should be initialized with an API Key from XenonView.')
         self.__apiKey = apiKey
         self.__apiUrl = apiUrl
+        self.__platform = None
         self.__journey = []
         self.__id = str(uuid4()) if not uuid else uuid
         self.__restoreJourney = []
@@ -40,6 +41,14 @@ class Xenon(object, metaclass=Singleton):
         if apiKey:
             self.__apiKey = apiKey
         return self.__apiKey
+
+    def platform(self, softwareVersion, deviceModel, operatingSystemVersion):
+        platform = {
+            'softwareVersion': softwareVersion,
+            'deviceModel': deviceModel,
+            'operatingSystemVersion': operatingSystemVersion
+        }
+        self.__platform = platform
 
     def pageView(self, page):
         content = {
@@ -53,6 +62,7 @@ class Xenon(object, metaclass=Singleton):
             'outcome': outcome,
             'action': action,
         }
+        if self.__platform: content['platform'] = self.__platform
         self.journeyAdd(content)
 
     def funnel(self, funnelStep, action):
@@ -200,3 +210,6 @@ class Xenon(object, metaclass=Singleton):
             restoreJourney.extend(currentJourney)
         self.storeJourney(restoreJourney)
         self.__restoreJourney = []
+
+    def removePlatform(self):
+        self.__platform = None

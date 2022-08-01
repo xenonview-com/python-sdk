@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.18 - Add new platform method.
 * v0.0.17 - Count duplicate steps instead of dropping them
 * v0.0.16 - Rename View to Xenon
 * v0.0.15 - Event adding follows standard
@@ -60,10 +61,39 @@ Xenon().key('<API KEY>')
 Of course, you'll have to make the following modifications to the above code:
 - Replace `<API KEY>` with your [api key](https://xenonview.com/api-get)
 
+### Platforming
+After you have initialized View, you can optionally specify platform details such as:
+- Operating System version
+- Device model (Pixel, Docker Container, Linux VM, Dell Server, etc.)
+- Software version of your application.
+
+```python
+from xenon_view_sdk import Xenon
+
+softwareVersion = "5.1.5"
+deviceModel = "Pixel 4 XL"
+operatingSystemVersion = "Android 12.0"
+
+# you can add platform details to outcomes
+Xenon().platform(softwareVersion, deviceModel, operatingSystemVersion)
+```
+This adds platform details for each [outcome](#outcome). Typically, this would be set once at initialization:
+```python
+from xenon_view_sdk import Xenon
+
+Xenon().key('<API KEY>')
+softwareVersion = "5.1.5"
+deviceModel = "Pixel 4 XL"
+operatingSystemVersion = "Android 12.0"
+Xenon().platform(softwareVersion, deviceModel, operatingSystemVersion)
+```
+
+
 ### Add Journeys
 After you have initialized the View singleton, you can start collecting journeys.
 
 There are a few helper methods you can use:
+#### <a name="outcome"></a>
 #### Outcome
 You can use this method to add an outcome to the journey.
 

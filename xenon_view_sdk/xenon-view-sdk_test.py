@@ -46,6 +46,36 @@ def test_canAddOutcome():
     assert journey['action'] == '<action>'
     assert journey['timestamp'] > 0.0
 
+def test_canAddOutcomeWithPlatformReset():
+    Xenon(apiKey='<API KEY>')
+    softwareVersion = "5.1.5"
+    deviceModel = "Pixel 4 XL"
+    operatingSystemVersion = "Android 12.0"
+    Xenon().platform(softwareVersion, deviceModel, operatingSystemVersion)
+    Xenon().removePlatform()
+    Xenon().outcome("<my outcome>", "<action>")
+    journey = Xenon().journey()[0]
+    assert journey['outcome'] == '<my outcome>'
+    assert journey['action'] == '<action>'
+    assert journey['timestamp'] > 0.0
+
+def test_canAddOutcomeWithPlatform():
+    Xenon(apiKey='<API KEY>')
+    softwareVersion = "5.1.5"
+    deviceModel = "Pixel 4 XL"
+    operatingSystemVersion = "Android 12.0"
+    Xenon().platform(softwareVersion, deviceModel, operatingSystemVersion)
+    Xenon().outcome("<my outcome>", "<action>")
+    journey = Xenon().journey()[0]
+    assert journey['outcome'] == '<my outcome>'
+    assert journey['action'] == '<action>'
+    assert journey['platform'] == {
+        "softwareVersion": softwareVersion,
+        "deviceModel": deviceModel,
+        "operatingSystemVersion": operatingSystemVersion
+    }
+    assert journey['timestamp'] > 0.0
+
 
 def test_canAddFunnel():
     Xenon(apiKey='<API KEY>')
