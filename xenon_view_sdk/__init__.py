@@ -213,3 +213,6 @@ class Xenon(object, metaclass=Singleton):
 
     def removePlatform(self):
         self.__platform = None
+
+    def newId(self):
+        self.__id = str(uuid4())

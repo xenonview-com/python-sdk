@@ -10,6 +10,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 
 ## <a name="whats-new"></a>
 ## What's New
+* v0.0.19 - Regenerate Journey ID with newId function.
 * v0.0.18 - Add new platform method.
 * v0.0.17 - Count duplicate steps instead of dropping them
 * v0.0.16 - Rename View to Xenon
@@ -175,14 +176,27 @@ person = {
 }
 # you can deanonymize before or after you have committed journey (in this case after):
 Xenon().deanonymize(person)
+
+# you can also deanonymize with a user ID:
+person = {
+    'UUID': "<some unique ID>"
+}
+Xenon().deanonymize(person)
 ```
 This deanonymizes every journey committed to a particular user.
+
+> **Note:** With journeys that span multiple platforms (eg. Website->Android->API backend), you can merge the journeys by deanonymizing on each platform.
 
 
 ### Journey IDs
 Each Journey has an ID akin to a session. After an Outcome occurs the ID remains the same to link all the Journeys. If you have a previous Journey in progress and would like to append to that, you can set the ID.
 
-After you have initialized the View singleton, you can view or set the Journey (Session) ID:
+> **Note:** For python, the Xenon object is a singleton. For multiple threads or async operations, the Journey ID will be reused.
+
+After you have initialized the Xenon singleton, you can:
+1. Use the default UUID
+2. Set the Journey (Session) ID
+3. Regenerate a new UUID
 
 ```python
 from xenon_view_sdk import Xenon
@@ -194,12 +208,15 @@ print(str(Xenon().id()))
 testId = '<reuse previous ID>'
 Xenon().id(testId)
 assert Xenon().id() == testId
+
+# lastly you can generate a new one (useful for serialized async operations that are for different customers)
+Xenon().newId()
 ```
 
 ### Error handling
 In the event of an API error, an exception will be raised with the response from the API as [Requests response object](https://docs.python-requests.org/en/latest/user/quickstart/#response-content):
 
-Note: The default handling of this situation will restore the journey (appending newly added pageViews, events, etc.) for future committing. If you want to do something special, you can do so like this:
+>**Note:** The default handling of this situation will restore the journey (appending newly added pageViews, events, etc.) for future committing. If you want to do something special, you can do so like this:
 
 ```python
 from xenon_view_sdk import Xenon, ApiException

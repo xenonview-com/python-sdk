@@ -46,6 +46,7 @@ def test_canAddOutcome():
     assert journey['action'] == '<action>'
     assert journey['timestamp'] > 0.0
 
+
 def test_canAddOutcomeWithPlatformReset():
     Xenon(apiKey='<API KEY>')
     softwareVersion = "5.1.5"
@@ -58,6 +59,7 @@ def test_canAddOutcomeWithPlatformReset():
     assert journey['outcome'] == '<my outcome>'
     assert journey['action'] == '<action>'
     assert journey['timestamp'] > 0.0
+
 
 def test_canAddOutcomeWithPlatform():
     Xenon(apiKey='<API KEY>')
@@ -173,3 +175,10 @@ def test_canGetAndSetId():
     assert Xenon().id() != None and Xenon().id() != ''
     Xenon().id('test')
     assert Xenon().id() == 'test'
+
+
+def test_canRegenerateId():
+    Xenon(apiKey='<API KEY>')
+    previousId = Xenon().id()
+    Xenon().newId()
+    assert Xenon().id() != previousId
