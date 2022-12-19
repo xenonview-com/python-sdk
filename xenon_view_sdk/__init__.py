@@ -161,7 +161,7 @@ class Xenon(object, metaclass=Singleton):
     def subscriptionUpsellDeclined(self, tier, method=None):
         content = {
             'superOutcome': 'Subscription Upsold',
-            'outcome': 'Upsell Declined - ' + tier,
+            'outcome': 'Declined - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
@@ -181,7 +181,7 @@ class Xenon(object, metaclass=Singleton):
     def referralDeclined(self, kind, detail=None):
         content = {
             'superOutcome': 'Referral',
-            'outcome': 'Referral Declined - ' + kind,
+            'outcome': 'Declined - ' + kind,
             'result': 'fail'
         }
         if detail: content['details'] = detail
@@ -215,7 +215,7 @@ class Xenon(object, metaclass=Singleton):
     def upsellDismissed(self, product):
         content = {
             'superOutcome': 'Upsold Product',
-            'outcome': 'Upsell Dismissed - ' + product,
+            'outcome': 'Dismissed - ' + product,
             'result': 'fail'
         }
         self.outcomeAdd(content)
@@ -256,7 +256,7 @@ class Xenon(object, metaclass=Singleton):
         method = ' - ' + method if method else ''
         content = {
             'superOutcome': 'Customer Purchase',
-            'outcome': 'Purchase Canceled' + method,
+            'outcome': 'Canceled' + method,
             'result': 'fail'
         }
         self.outcomeAdd(content)
@@ -508,23 +508,48 @@ class Xenon(object, metaclass=Singleton):
         content['timestamp'] = datetime.now(utc).timestamp()
         if journey and len(journey) > 0:
             last = journey[-1]
-            lastKeys = last.keys()
-            contentKeys = content.keys()
-            if ("funnel" in lastKeys and "funnel" in contentKeys) or (
-                    "category" in lastKeys and "category" in contentKeys):
-                if 'action' in lastKeys and \
-                        'action' in contentKeys and \
-                        last['action'] != content['action']:
-                    journey.append(content)
-                else:
-                    count = last['count'] if 'count' in lastKeys else 1
-                    last['count'] = count + 1
+            if self.isDuplicate(last, content):
+                count = last['count'] if 'count' in last.keys() else 1
+                last['count'] = count + 1
             else:
                 journey.append(content)
         else:
             journey = [content]
 
         self.storeJourney(journey)
+
+    def isDuplicate(self, last, content):
+        lastKeys = last.keys()
+        contentKeys = content.keys()
+        if lastKeys != contentKeys: return False
+        if 'category' not in contentKeys or 'category' not in lastKeys: return False
+        if content['category'] != last['category']: return False
+        if 'action' not in contentKeys or 'action' not in lastKeys: return False
+        if content['action'] != last['action']: return False
+        return self.duplicateFeature(last, content, lastKeys, contentKeys) or \
+               self.duplicateContent(last, content, lastKeys, contentKeys) or \
+               self.duplicateMilestone(last, content, lastKeys, contentKeys)
+
+    def duplicateFeature(self, last, content, lastKeys, contentKeys):
+        if content['category'] != 'Feature' or last['category'] != 'Feature': return False
+        if content['name'] != last['name']: return False
+        return True
+
+    def duplicateContent(self, last, content, lastKeys, contentKeys):
+        if content['category'] != 'Content' or last['category'] != 'Content': return False
+        if content['type'] != last['type']: return False
+        if 'identifier' not in contentKeys and 'identifier' not in lastKeys: return True
+        if content['identifier'] != last['identifier']: return False
+        if 'details' not in contentKeys and 'details' not in lastKeys: return True
+        if content['details'] != last['details']: return False
+        return True
+
+    def duplicateMilestone(self, last, content, lastKeys, contentKeys):
+        if content['category'] == 'Feature' or last['category'] == 'Feature': return False
+        if content['category'] == 'Content' or last['category'] == 'Content': return False
+        if content['name'] != last['name']: return False
+        if content['details'] != last['details']: return False
+        return True
 
     def journeys(self, PostMethod=post, sleepTime=1, verify=True):
         headers = {"Authorization": "Bearer " + self.__apiKey}
@@ -568,4 +593,3 @@ class Xenon(object, metaclass=Singleton):
             restoreJourney.extend(currentJourney)
         self.storeJourney(restoreJourney)
         self.__restoreJourney = []
-

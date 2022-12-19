@@ -202,7 +202,7 @@ def test_cannotUpsellSubscription():
     Xenon().subscriptionUpsellDeclined(annualSilver, method)
     journey = Xenon().journey()[0]
     assert journey['superOutcome'] == 'Subscription Upsold'
-    assert journey['outcome'] == 'Upsell Declined - Silver Annual'
+    assert journey['outcome'] == 'Declined - Silver Annual'
     assert journey['result'] == 'fail'
 
 
@@ -224,7 +224,7 @@ def test_cannotRefer():
     Xenon().referralDeclined(kind, detail)
     journey = Xenon().journey()[0]
     assert journey['superOutcome'] == 'Referral'
-    assert journey['outcome'] == 'Referral Declined - Share'
+    assert journey['outcome'] == 'Declined - Share'
     assert journey['result'] == 'fail'
 
 
@@ -264,7 +264,7 @@ def test_cannotUpsell():
     Xenon().upsellDismissed(laptop)
     journey = Xenon().journey()[0]
     assert journey['superOutcome'] == 'Upsold Product'
-    assert journey['outcome'] == 'Upsell Dismissed - Dell XPS'
+    assert journey['outcome'] == 'Dismissed - Dell XPS'
     assert journey['result'] == 'fail'
 
 
@@ -312,7 +312,7 @@ def test_cannotPurchase():
     Xenon().purchaseCanceled(method)
     journey = Xenon().journey()[0]
     assert journey['superOutcome'] == 'Customer Purchase'
-    assert journey['outcome'] == 'Purchase Canceled - Stripe'
+    assert journey['outcome'] == 'Canceled - Stripe'
     assert journey['result'] == 'fail'
 
 
@@ -495,7 +495,7 @@ def test_canAddCustomMilestone():
 # Internal tests
 
 
-def test_doesNotAddDuplicateButIncreasesCount():
+def test_doesNotAddDuplicateButIncreasesCountForFeature():
     Xenon(apiKey='<API KEY>')
     name = "Scale Recipe"
     Xenon().featureCompleted(name)
@@ -505,6 +505,106 @@ def test_doesNotAddDuplicateButIncreasesCount():
     assert journey['timestamp'] > 0.0
     assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
+
+def test_doesNotAddDuplicateButIncreasesCountForContent():
+    Xenon(apiKey='<API KEY>')
+    name = "Recipe"
+    Xenon().contentSearched(name)
+    Xenon().contentSearched(name)
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['timestamp'] > 0.0
+    assert journey['count'] == 2
+    assert len(Xenon().journey()) == 1
+
+def test_doesNotAddDuplicateButIncreasesCountForContentWithIdentifier():
+    Xenon(apiKey='<API KEY>')
+    name = "Recipe"
+    Xenon().contentEdited(name, 'identifier')
+    Xenon().contentEdited(name, 'identifier')
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['timestamp'] > 0.0
+    assert journey['count'] == 2
+    assert len(Xenon().journey()) == 1
+
+def test_doesNotAddDuplicateButIncreasesCountForContentWithDetail():
+    Xenon(apiKey='<API KEY>')
+    name = "Recipe"
+    Xenon().contentEdited(name, 'identifier', 'detail')
+    Xenon().contentEdited(name, 'identifier', 'detail')
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['timestamp'] > 0.0
+    assert journey['count'] == 2
+    assert len(Xenon().journey()) == 1
+
+def test_doesNotAddDuplicateButIncreasesCountForCustom():
+    Xenon(apiKey='<API KEY>')
+    category = "Function"
+    operation = "Called"
+    name = "Query Database"
+    detail = "User Lookup"
+    Xenon().milestone(category, operation, name, detail)
+    Xenon().milestone(category, operation, name, detail)
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Function'
+    assert journey['timestamp'] > 0.0
+    assert journey['count'] == 2
+    assert len(Xenon().journey()) == 1
+
+def test_doesAddAlmostDuplicateForFeature():
+    Xenon(apiKey='<API KEY>')
+    name = "Scale Recipe"
+    Xenon().featureAttempted(name)
+    Xenon().featureCompleted(name)
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Feature'
+    assert journey['timestamp'] > 0.0
+    assert len(Xenon().journey()) == 2
+
+def test_doesAddAlmostDuplicateForContent():
+    Xenon(apiKey='<API KEY>')
+    name = "Scale Recipe"
+    Xenon().contentViewed(name)
+    Xenon().contentSearched(name)
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['timestamp'] > 0.0
+    assert len(Xenon().journey()) == 2
+
+def test_doesAddAlmostDuplicateForContentWithIdentifier():
+    Xenon(apiKey='<API KEY>')
+    name = "Scale Recipe"
+    Xenon().contentEdited(name, 'identifier')
+    Xenon().contentEdited(name, 'identifier2')
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['timestamp'] > 0.0
+    assert len(Xenon().journey()) == 2
+
+def test_doesAddAlmostDuplicateForContentWithDetail():
+    Xenon(apiKey='<API KEY>')
+    name = "Scale Recipe"
+    Xenon().contentEdited(name, 'identifier', 'detail')
+    Xenon().contentEdited(name, 'identifier', 'detail2')
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['timestamp'] > 0.0
+    assert len(Xenon().journey()) == 2
+
+def test_doesAddAlmostDuplicateForCustom():
+    Xenon(apiKey='<API KEY>')
+    category = "Function"
+    operation = "Called"
+    name = "Query Database"
+    detail = "User Lookup"
+    Xenon().milestone(category, operation, name, detail)
+    Xenon().milestone(category, operation, name, detail+'2')
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Function'
+    assert journey['timestamp'] > 0.0
+    assert len(Xenon().journey()) == 2
 
 
 def test_addMultipleMilestones():
