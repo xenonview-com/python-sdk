@@ -521,7 +521,7 @@ class Xenon(object, metaclass=Singleton):
     def isDuplicate(self, last, content):
         lastKeys = last.keys()
         contentKeys = content.keys()
-        if lastKeys != contentKeys: return False
+        if not set(contentKeys).issubset(set(lastKeys)): return False
         if 'category' not in contentKeys or 'category' not in lastKeys: return False
         if content['category'] != last['category']: return False
         if 'action' not in contentKeys or 'action' not in lastKeys: return False
