@@ -231,7 +231,7 @@ class Xenon(object, metaclass=Singleton):
     def checkoutCanceled(self):
         content = {
             'superOutcome': 'Customer Checkout',
-            'outcome': 'Checkout Canceled',
+            'outcome': 'Canceled',
             'result': 'fail'
         }
         self.outcomeAdd(content)

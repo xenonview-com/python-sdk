@@ -34,6 +34,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 * [License](#license)
 
 ## What's New <a id='whats-new'></a>
+* v0.1.2 - typo fixed
 * v0.1.1 - duplicates for new SDK handled
 * v0.1.0 - SDK redesign
 

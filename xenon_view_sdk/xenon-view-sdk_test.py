@@ -282,7 +282,7 @@ def test_cannotCheckOut():
     Xenon().checkoutCanceled()
     journey = Xenon().journey()[0]
     assert journey['superOutcome'] == 'Customer Checkout'
-    assert journey['outcome'] == 'Checkout Canceled'
+    assert journey['outcome'] == 'Canceled'
     assert journey['result'] == 'fail'
 
 
