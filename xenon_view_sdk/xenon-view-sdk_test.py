@@ -63,9 +63,9 @@ def test_canAddOutcomeWithPlatform():
 
 def test_canAddOutcomeWithTagsReset():
     Xenon(apiKey='<API KEY>')
-    tags = ["tag"]
-    Xenon().tag(tags)
-    Xenon().untag()
+    variants = ["variant"]
+    Xenon().variant(variants)
+    Xenon().resetVariants()
     Xenon().applicationInstalled()
     journey = Xenon().journey()[0]
     assert 'tags' not in journey.keys()
@@ -73,11 +73,11 @@ def test_canAddOutcomeWithTagsReset():
 
 def test_canAddOutcomeWithTags():
     Xenon(apiKey='<API KEY>')
-    tags = ["tag"]
-    Xenon().tag(tags)
+    variants = ["variant"]
+    Xenon().variant(variants)
     Xenon().applicationInstalled()
     journey = Xenon().journey()[0]
-    assert journey['tags'] == tags
+    assert journey['tags'] == variants
 
 # Stock Business Outcomes tests
 

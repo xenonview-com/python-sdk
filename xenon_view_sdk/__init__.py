@@ -43,7 +43,7 @@ class Xenon(object, metaclass=Singleton):
             self.__apiKey = apiKey
         return self.__apiKey
 
-    # Platforming and Tagging:
+    # Platforming and Variants:
 
     def platform(self, softwareVersion, deviceModel, operatingSystemName, operatingSystemVersion):
         platform = {
@@ -57,10 +57,10 @@ class Xenon(object, metaclass=Singleton):
     def removePlatform(self):
         self.__platform = None
 
-    def tag(self, tags):
-        self.__tags = tags
+    def variant(self, variants):
+        self.__tags = variants
 
-    def untag(self):
+    def resetVariants(self):
         self.__tags = []
 
     # Stock Business Outcomes:
