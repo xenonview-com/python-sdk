@@ -551,31 +551,6 @@ class Xenon(object, metaclass=Singleton):
         if content['details'] != last['details']: return False
         return True
 
-    def journeys(self, PostMethod=post, sleepTime=1, verify=True):
-        headers = {"Authorization": "Bearer " + self.__apiKey}
-        journeysApi = {
-            "name": "ApiJourneys",
-            "parameters": {"uuid": self.__id}
-        }
-        response = None
-        for _ in range(3):
-            try:
-                path = 'https://' + self.__apiUrl + "/journeys"
-                response = PostMethod(path, data=dumps(journeysApi), headers=headers, verify=verify)
-                break
-            except requests.exceptions.SSLError as exception:
-                sleep(sleepTime)
-                continue
-            except Exception as exception:
-                sleep(sleepTime)
-                continue
-
-        if not response or not int(response.status_code) == 200:
-            raise ApiException(response, "Api responded with error.")
-
-        jsonResponse = response.json()
-        return jsonResponse
-
     def journey(self):
         return self.__journey
 
