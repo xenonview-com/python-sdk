@@ -151,6 +151,16 @@ def test_canInitiallySubscribe():
     assert journey['result'] == 'success'
 
 
+def test_canInitiallySubscribeWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().initialSubscription(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
+
 def test_cannotInitiallySubscribe():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
@@ -160,6 +170,16 @@ def test_cannotInitiallySubscribe():
     assert journey['superOutcome'] == 'Initial Subscription'
     assert journey['outcome'] == 'Decline - Silver Annual'
     assert journey['result'] == 'fail'
+
+
+def test_cannotInitiallySubscribeWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionDeclined(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
 
 
 def test_canRenewSubscription():
@@ -173,6 +193,16 @@ def test_canRenewSubscription():
     assert journey['result'] == 'success'
 
 
+def test_canRenewSubscriptionWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionRenewed(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
+
 def test_cannotRenewSubscription():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
@@ -184,6 +214,36 @@ def test_cannotRenewSubscription():
     assert journey['result'] == 'fail'
 
 
+def test_cannotRenewSubscriptionWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionCanceled(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
+
+def test_canPauseSubscription():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    Xenon().subscriptionPaused(annualSilver, method)
+    journey = Xenon().journey()[0]
+    assert journey['superOutcome'] == 'Subscription Renewal'
+    assert journey['outcome'] == 'Paused - Silver Annual'
+    assert journey['result'] == 'fail'
+
+
+def test_canPauseSubscriptionWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionPaused(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
 def test_canUpsellSubscription():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
@@ -193,6 +253,15 @@ def test_canUpsellSubscription():
     assert journey['superOutcome'] == 'Subscription Upsold'
     assert journey['outcome'] == 'Upsold - Silver Annual'
     assert journey['result'] == 'success'
+
+def test_canUpsellSubscriptionWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionUpsold(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
 
 
 def test_cannotUpsellSubscription():
@@ -204,6 +273,81 @@ def test_cannotUpsellSubscription():
     assert journey['superOutcome'] == 'Subscription Upsold'
     assert journey['outcome'] == 'Declined - Silver Annual'
     assert journey['result'] == 'fail'
+
+def test_cannotUpsellSubscriptionWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionUpsellDeclined(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
+
+def test_canSubscriptionDownsell():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    Xenon().subscriptionDownsell(annualSilver, method)
+    journey = Xenon().journey()[0]
+    assert journey['superOutcome'] == 'Subscription Upsold'
+    assert journey['outcome'] == 'Downsell - Silver Annual'
+    assert journey['result'] == 'fail'
+
+def test_canSubscriptionDownsellWithValue():
+    Xenon(apiKey='<API KEY>')
+    annualSilver = "Silver Annual"
+    method = "Stripe"
+    value = '$25'
+    Xenon().subscriptionDownsell(annualSilver, method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
+
+def test_canAdClicked():
+    Xenon(apiKey='<API KEY>')
+    provider = "AdMod"
+    id_ = "ID-1234"
+    Xenon().adClicked(provider)
+    journey = Xenon().journey()[0]
+    assert journey['superOutcome'] == 'Advertisement'
+    assert journey['outcome'] == 'Ad Click - AdMod'
+    assert journey['result'] == 'success'
+
+
+def test_canAdClickedWithValue():
+    Xenon(apiKey='<API KEY>')
+    provider = "AdMod"
+    id_ = "ID-1234"
+    value = '$25'
+    Xenon().adClicked(provider, id_, value)
+    journey = Xenon().journey()[0]
+    assert journey['id'] == id_
+    assert journey['value'] == value
+
+
+def test_canAdIgnored():
+    Xenon(apiKey='<API KEY>')
+    provider = "AdMod"
+    id_ = "ID-1234"
+    Xenon().adIgnored(provider)
+    journey = Xenon().journey()[0]
+    assert journey['superOutcome'] == 'Advertisement'
+    assert journey['outcome'] == 'Ad Ignored - AdMod'
+    assert journey['result'] == 'fail'
+
+
+def test_canAdIgnoredWithValue():
+    Xenon(apiKey='<API KEY>')
+    provider = "AdMod"
+    id_ = "ID-1234"
+    value = '$25'
+    Xenon().adIgnored(provider, id_, value)
+    journey = Xenon().journey()[0]
+    assert journey['id'] == id_
+    assert journey['value'] == value
+
+
 
 
 def test_canRefer():
@@ -305,15 +449,22 @@ def test_canPurchase():
     assert journey['outcome'] == 'Purchase - Stripe'
     assert journey['result'] == 'success'
 
+def test_canPurchaseWithValue():
+    Xenon(apiKey='<API KEY>')
+    method = "Stripe"
+    value = '$25'
+    Xenon().purchased(method, value)
+    journey = Xenon().journey()[0]
+    assert journey['value'] == value
+
 
 def test_cannotPurchase():
     Xenon(apiKey='<API KEY>')
     method = "Stripe"  # optional
-    Xenon().purchaseCanceled(method)
+    value = '$25'
+    Xenon().purchaseCanceled(method, value)
     journey = Xenon().journey()[0]
-    assert journey['superOutcome'] == 'Customer Purchase'
-    assert journey['outcome'] == 'Canceled - Stripe'
-    assert journey['result'] == 'fail'
+    assert journey['value'] == value
 
 
 def test_canFulfillPromise():
@@ -445,6 +596,18 @@ def test_canDeleteContent():
     journey = Xenon().journey()[0]
     assert journey['category'] == 'Content'
     assert journey['action'] == 'Deleted'
+    assert journey['type'] == contentType
+    assert journey['identifier'] == identifier
+    assert journey['timestamp'] > 0.0
+
+def test_canArchiveContent():
+    Xenon(apiKey='<API KEY>')
+    contentType = "Blog Comment"
+    identifier = "how-to-install-xenon-view"  # optional
+    Xenon().contentArchived(contentType, identifier)
+    journey = Xenon().journey()[0]
+    assert journey['category'] == 'Content'
+    assert journey['action'] == 'Archived'
     assert journey['type'] == contentType
     assert journey['identifier'] == identifier
     assert journey['timestamp'] > 0.0

@@ -38,6 +38,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 <br/>
 
 ## What's New <a id='whats-new'></a>
+* v0.1.6 - Added: Downsell, Ad, Content Archive, Subscription Pause and included price for all subscriptions
 * v0.1.5 - remove journeys call 
 * v0.1.4 - Rename tag to variant
 * v0.1.3 - Readme update
@@ -130,6 +131,7 @@ Start by listing the technologies involved and what languages your company uses.
 
 Next, figure out how your outcomes spread across those technologies. Below are pointers to our currently supported languages:
 * [React](https://github.com/xenonview-com/view-js-sdk)
+* [Next.Js](https://github.com/xenonview-com/view-js-sdk)
 * [Angular](https://github.com/xenonview-com/view-js-sdk)
 * [HTML](https://github.com/xenonview-com/view-js-sdk)
 * [Plain JavaScript](https://github.com/xenonview-com/view-js-sdk)
@@ -166,8 +168,9 @@ As you view the categories, you can quickly identify issues (for example, if the
 | Account Signup | [`accountSignup()`](#saas-account-signup) | [`accountSignupDeclined()`](#saas-account-signup-fail) | 
 | Application Installation | [`applicationInstalled()`](#saas-application-install) |  [`applicationNotInstalled()`](#saas-application-install-fail) | 
 | Initial Subscription | [`initialSubscription()`](#saas-initial-subscription) | [`subscriptionDeclined()`](#saas-initial-subscription-fail) |
-| Subscription Renewed | [`subscriptionRenewed()`](#saas-renewed-subscription) | [`subscriptionCanceled()`](#saas-renewed-subscription-fail) | 
-| Subscription Upsell | [`subscriptionUpsold()`](#saas-upsell-subscription) | [`subscriptionUpsellDeclined()`](#saas-upsell-subscription-fail) | 
+| Subscription Renewed | [`subscriptionRenewed()`](#saas-renewed-subscription) | [`subscriptionCanceled()`](#saas-renewed-subscription-fail) / [`subscriptionPaused()`](#saas-paused-subscription) | 
+| Subscription Upsell | [`subscriptionUpsold()`](#saas-upsell-subscription) | [`subscriptionUpsellDeclined()`](#saas-upsell-subscription-fail) / [`subscriptionDownsell()`](#saas-downsell-subscription)| 
+| Ad Clicked | [`adClicked()`](#saas-ad-clicked) | [`adIgnored()`](#saas-ad-ignored) |
 | Referral | [`referral()`](#saas-referral) | [`referralDeclined()`](#saas-referral-fail) | 
 
 
@@ -203,11 +206,9 @@ Milestones break down into two types (click on a call to see usage):
 | Features | Content |
 | --- | --- |
 | [`featureAttempted()`](#feature-started) | [`contentViewed()`](#content-viewed) |
-| [`featureFailed()`](#feature-failed) | [`contentEdited()`](#content-edited) |
-| [`featureCompleted()`](#feature-complete) | [`contentCreated()`](#content-created) |
-| | [`contentDeleted()`](#content-deleted) |
-| | [`contentRequested()`](#content-requested)|
-| | [`contentSearched()`](#content-searched)|
+| [`featureFailed()`](#feature-failed) | [`contentCreated()`](#content-created) / [`contentEdited()`](#content-edited) |
+| [`featureCompleted()`](#feature-complete) |  [`contentDeleted()`](#content-deleted) / [`contentArchived()`](#content-archived) |
+| | [`contentRequested()`](#content-requested)/[`contentSearched()`](#content-searched)|
 
 <br/>
 
@@ -453,9 +454,13 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" # optional
+value = '$25' #optional
 
-# Successful subscription to the lowest tier with Stripe
+# Successful subscription of the lowest tier with Stripe
 Xenon().initialSubscription(tierSilver, method)
+
+# Successful subscription of the lowest tier with Stripe for $25
+Xenon().initialSubscription(tierSilver, method, value)
 # ...
 # Successful subscription to the middle tier
 Xenon().initialSubscription(tierGold)
@@ -479,6 +484,7 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" # optional
+value = '$25' # optional
 
 # Unsuccessful subscription of the lowest tier
 Xenon().subscriptionDeclined(tierSilver)
@@ -491,6 +497,9 @@ Xenon().subscriptionDeclined(tierPlatium)
 # ...
 # Unsuccessful subscription of an annual period with Stripe
 Xenon().subscriptionDeclined(annualSilver, method)
+
+# Unsuccessful subscription of an annual period for $25
+Xenon().subscriptionDeclined(annualSilver, method, value)
 ```
 
 <br/>
@@ -510,9 +519,13 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" #optional
+value = '$25' # optional
 
 # Successful renewal of the lowest tier with Stripe
 Xenon().subscriptionRenewed(tierSilver, method)
+
+# Successful renewal of the lowest tier with Stripe for $25
+Xenon().subscriptionRenewed(annualSilver, method, value)
 # ...
 # Successful renewal of the middle tier
 Xenon().subscriptionRenewed(tierGold)
@@ -536,6 +549,7 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" #optional
+value = '$25' # optional
 
 # Canceled subscription of the lowest tier
 Xenon().subscriptionCanceled(tierSilver)
@@ -548,6 +562,39 @@ Xenon().subscriptionCanceled(tierPlatium)
 # ...
 # Canceled subscription of an annual period with Stripe
 Xenon().subscriptionCanceled(annualSilver, method)
+
+# Canceled subscription of an annual period with Stripe for $25
+Xenon().subscriptionCanceled(annualSilver, method, value)
+```
+<br/>
+
+##### ```subscriptionPaused()``` <a id='saas-paused-subscription'></a>
+
+> :memo: Note: You want to be consistent between success and failure and match the specifiers
+```python
+from xenon_view_sdk import Xenon
+
+tierSilver = "Silver Monthly"
+tierGold = "Gold"
+tierPlatium = "Platium"
+annualSilver = "Silver Annual"
+method = "Stripe" #optional
+value = '$25' # optional
+
+# Paused subscription of the lowest tier
+Xenon().subscriptionPaused(tierSilver)
+# ...
+# Paused subscription of the middle tier
+Xenon().subscriptionPaused(tierGold)
+# ...
+# Paused subscription of the top tier
+Xenon().subscriptionPaused(tierPlatium)
+# ...
+# Paused subscription of an annual period with Stripe
+Xenon().subscriptionPaused(annualSilver, method)
+
+# Paused subscription of an annual period with Stripe for $25
+Xenon().subscriptionPaused(annualSilver, method, value)
 ```
 
 <br/>
@@ -566,11 +613,15 @@ tierGold = "Gold Monthly"
 tierPlatium = "Platium"
 annualGold = "Gold Annual"
 method = "Stripe" #optional
+value = '$25' # optional
 
 # Assume already subscribed to Silver
 
 # Successful upsell of the middle tier with Stripe
 Xenon().subscriptionUpsold(tierGold, method)
+
+# Successful upsell of the middle tier with Stripe for $25
+Xenon().subscriptionUpsold(tierGold, method, value)
 # ...
 # Successful upsell of the top tier
 Xenon().subscriptionUpsold(tierPlatium)
@@ -590,7 +641,7 @@ tierGold = "Gold Monthly"
 tierPlatium = "Platium"
 annualGold = "Gold Annual"
 method = "Stripe" #optional
-
+value = '$25' # optional
 
 # Assume already subscribed to Silver
 
@@ -602,11 +653,86 @@ Xenon().subscriptionUpsellDeclined(tierPlatium)
 # ...
 # Rejected upsell of middle tier - annual period
 Xenon().subscriptionUpsellDeclined(annualGold, method)
+
+# Rejected upsell of middle tier - annual period with Stripe for $25
+Xenon().subscriptionUpsellDeclined(annualGold, method, value)
+```
+<br/>
+
+##### ```subscriptionDownsell()``` <a id='saas-downsell-subscription'></a>
+> :memo: Note: You want to be consistent between success and failure and match the specifiers
+```python
+from xenon_view_sdk import Xenon
+
+tierGold = "Gold Monthly"
+tierPlatium = "Platium"
+annualGold = "Gold Annual"
+method = "Stripe" #optional
+value = '$15' #optional
+
+# Assume already subscribed to Platium
+
+# Downsell to Gold
+Xenon().subscriptionDownsell(tierGold)
+# ...
+# Downsell to Gold annual with method
+Xenon().subscriptionDownsell(annualGold, method)
+
+# Downsell to Gold - annual period with Stripe for $15
+Xenon().subscriptionDownsell(annualGold, method, value)
 ```
 
 <br/>
 
-#### Referrals  <a id='saas-referral'></a>
+#### Ad Clicked  <a id='saas-ad-clicked'></a>
+Use this call to track when customers click on an Advertisement.
+You can add a specifier string to the call to differentiate as follows:
+
+<br/>
+
+##### ```adClicked()```
+```python
+from xenon_view_sdk import Xenon
+
+provider = "AdMob"
+id = "ID-1234" # optional
+value = "$0.25" # optional
+
+# Click an Ad from AdMob
+Xenon().adClicked(provider)
+# ...
+# Click an Ad from AdMob identfied by ID-1234
+Xenon().adClicked(provider, id)
+# ...
+# Click an Ad from AdMob identfied by ID-1234 with value 
+Xenon().adClicked(provider, id, value)
+```
+
+<br/>
+
+
+##### ```adIgnored()```  <a id='saas-ad-ignored'></a>
+```python
+from xenon_view_sdk import Xenon
+
+provider = "AdMob"
+id = "ID-1234" # optional
+value = "$0.25" # optional
+
+# No action on an Ad from AdMob
+Xenon().adIgnored(provider)
+# ...
+# No action on an Ad from AdMob identfied by ID-1234
+Xenon().adIgnored(provider, id)
+# ...
+# No action on an Ad from AdMob identfied by ID-1234 with value 
+Xenon().adIgnored(provider, id, value)
+```
+
+<br/>
+
+
+#### Referral  <a id='saas-referral'></a>
 Use this call to track when customers refer someone to your offering.
 You can add a specifier string to the call to differentiate as follows:
 
@@ -785,14 +911,16 @@ You can add a specifier string to the call to differentiate as follows:
 ```python
 from xenon_view_sdk import Xenon
 
-laptop = "Dell XPS"
-keyboard = "Apple Magic Keyboard"
+laptop = 'Dell XPS'
+laptopValue = '$1459' #optional
+keyboard = 'Apple Magic Keyboard'
+keyboardValue = '$139' #optional
 
 # upsold a laptop
 Xenon().upsold(laptop)
 # ...
-# upsold a keyboard
-Xenon().upsold(keyboard)
+# upsold a keyboard with value
+Xenon().upsold(keyboard, keyboardValue)
 ```
 
 <br/>
@@ -802,14 +930,15 @@ Xenon().upsold(keyboard)
 ```python
 from xenon_view_sdk import Xenon
 
-laptop = "Dell XPS"
-keyboard = "Apple Magic Keyboard"
+laptop = 'Dell XPS'
+keyboard = 'Apple Magic Keyboard'
+keyboardValue = '$139' #optional
 
 # Doesn't add a laptop during upsell
 Xenon().upsellDismissed(laptop)
 # ...
 # Doesn't add a keyboard during upsell
-Xenon().upsellDismissed(keyboard)
+Xenon().upsellDismissed(keyboard, keyboardValue)
 ```
 
 <br/>
@@ -866,9 +995,13 @@ Use this call to track when your Customer completes a purchase.
 from xenon_view_sdk import Xenon
 
 method = "Stripe"
+value = '$2011' # optional
 
 # Successful Purchase
 Xenon().purchased(method)
+
+# Successful Purchase for $2011
+Xenon().purchased(method, value)
 ```
 
 <br/>
@@ -878,11 +1011,14 @@ Xenon().purchased(method)
 from xenon_view_sdk import Xenon
 
 method = "Stripe" #optional
+value = '$2011' # optional
 
 # Customer cancels the purchase.
 Xenon().purchaseCanceled()
 # -OR-
 Xenon().purchaseCanceled(method)
+# -OR-
+Xenon().purchaseCanceled(method, value)
 ```
 
 <br/>
@@ -1151,6 +1287,22 @@ identifier = "how-to-install-xenon-view" # optional
 Xenon().contentDeleted(contentType, identifier)
 # -OR- 
 Xenon().contentDeleted(contentType)
+```
+
+<br/>
+
+##### ```contentArchived()``` <a id='content-archived'></a>
+Use this function to indicate archiving specific content.
+```python
+from xenon_view_sdk import Xenon
+
+contentType = "Blog Comment"
+identifier = "how-to-install-xenon-view" # optional
+
+# Customer archived their comment on a blog post 
+Xenon().contentArchived(contentType, identifier)
+# -OR- 
+Xenon().contentArchived(contentType)
 ```
 
 <br/>

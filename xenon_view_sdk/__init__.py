@@ -113,58 +113,104 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def initialSubscription(self, tier, method=None):
+    def initialSubscription(self, tier, method=None, value=None):
         content = {
             'superOutcome': 'Initial Subscription',
             'outcome': 'Subscribe - ' + tier,
             'result': 'success'
         }
         if method: content['method'] = method
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def subscriptionDeclined(self, tier, method=None):
+    def subscriptionDeclined(self, tier, method=None, value=None):
         content = {
             'superOutcome': 'Initial Subscription',
             'outcome': 'Decline - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def subscriptionRenewed(self, tier, method=None):
+    def subscriptionRenewed(self, tier, method=None, value=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Renew - ' + tier,
             'result': 'success'
         }
         if method: content['method'] = method
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def subscriptionCanceled(self, tier, method=None):
+    def subscriptionCanceled(self, tier, method=None, value=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Cancel - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def subscriptionUpsold(self, tier, method=None):
+    def subscriptionPaused(self, tier, method=None, value=None):
+        content = {
+            'superOutcome': 'Subscription Renewal',
+            'outcome': 'Paused - ' + tier,
+            'result': 'fail'
+        }
+        if method: content['method'] = method
+        if value: content['value'] = value
+        self.outcomeAdd(content)
+
+    def subscriptionUpsold(self, tier, method=None, value=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Upsold - ' + tier,
             'result': 'success'
         }
         if method: content['method'] = method
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def subscriptionUpsellDeclined(self, tier, method=None):
+    def subscriptionUpsellDeclined(self, tier, method=None, value=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Declined - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
+        if value: content['value'] = value
+        self.outcomeAdd(content)
+
+    def subscriptionDownsell(self, tier, method=None, value=None):
+        content = {
+            'superOutcome': 'Subscription Upsold',
+            'outcome': 'Downsell - ' + tier,
+            'result': 'fail'
+        }
+        if method: content['method'] = method
+        if value: content['value'] = value
+        self.outcomeAdd(content)
+
+    def adClicked(self, provider, id_=None, value=None):
+        content = {
+            'superOutcome': 'Advertisement',
+            'outcome': 'Ad Click - ' + provider,
+            'result': 'success'
+        }
+        if id_: content['id'] = id_
+        if value: content['value'] = value
+        self.outcomeAdd(content)
+
+    def adIgnored(self, provider, id_=None, value=None):
+        content = {
+            'superOutcome': 'Advertisement',
+            'outcome': 'Ad Ignored - ' + provider,
+            'result': 'fail'
+        }
+        if id_: content['id'] = id_
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
     def referral(self, kind, detail=None):
@@ -204,20 +250,22 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def upsold(self, product):
+    def upsold(self, product, value=None):
         content = {
             'superOutcome': 'Upsold Product',
             'outcome': 'Upsold - ' + product,
             'result': 'success'
         }
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def upsellDismissed(self, product):
+    def upsellDismissed(self, product, value=None):
         content = {
             'superOutcome': 'Upsold Product',
             'outcome': 'Dismissed - ' + product,
             'result': 'fail'
         }
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
     def checkedOut(self):
@@ -244,21 +292,23 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def purchased(self, method):
+    def purchased(self, method, value=None):
         content = {
             'superOutcome': 'Customer Purchase',
             'outcome': 'Purchase - ' + method,
             'result': 'success'
         }
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
-    def purchaseCanceled(self, method=None):
+    def purchaseCanceled(self, method=None, value=None):
         method = ' - ' + method if method else ''
         content = {
             'superOutcome': 'Customer Purchase',
             'outcome': 'Canceled' + method,
             'result': 'fail'
         }
+        if value: content['value'] = value
         self.outcomeAdd(content)
 
     def promiseFulfilled(self):
@@ -354,6 +404,15 @@ class Xenon(object, metaclass=Singleton):
         event = {
             'category': 'Content',
             'action': 'Deleted',
+            'type': contentType,
+        }
+        if identifier: event['identifier'] = identifier
+        self.journeyAdd(event)
+
+    def contentArchived(self, contentType, identifier=None):
+        event = {
+            'category': 'Content',
+            'action': 'Archived',
             'type': contentType,
         }
         if identifier: event['identifier'] = identifier
