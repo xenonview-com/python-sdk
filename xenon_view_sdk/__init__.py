@@ -113,7 +113,7 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def initialSubscription(self, tier, method=None, price=None):
+    def initialSubscription(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Initial Subscription',
             'outcome': 'Subscribe - ' + tier,
@@ -121,9 +121,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionDeclined(self, tier, method=None, price=None):
+    def subscriptionDeclined(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Initial Subscription',
             'outcome': 'Decline - ' + tier,
@@ -131,9 +132,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionRenewed(self, tier, method=None, price=None):
+    def subscriptionRenewed(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Renew - ' + tier,
@@ -141,9 +143,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionCanceled(self, tier, method=None, price=None):
+    def subscriptionCanceled(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Cancel - ' + tier,
@@ -151,9 +154,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionPaused(self, tier, method=None, price=None):
+    def subscriptionPaused(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Paused - ' + tier,
@@ -161,9 +165,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionUpsold(self, tier, method=None, price=None):
+    def subscriptionUpsold(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Upsold - ' + tier,
@@ -171,9 +176,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionUpsellDeclined(self, tier, method=None, price=None):
+    def subscriptionUpsellDeclined(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Declined - ' + tier,
@@ -181,9 +187,10 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
-    def subscriptionDownsell(self, tier, method=None, price=None):
+    def subscriptionDownsell(self, tier, method=None, price=None, term=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Downsell - ' + tier,
@@ -191,6 +198,7 @@ class Xenon(object, metaclass=Singleton):
         }
         if method: content['method'] = method
         if price: content['price'] = price
+        if term: content['term'] = term
         self.outcomeAdd(content)
 
     def adClicked(self, provider, id_=None, price=None):

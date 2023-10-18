@@ -38,6 +38,8 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 <br/>
 
 ## What's New <a id='whats-new'></a>
+* v0.1.8 - Added: Term for all subscriptions.
+* v0.1.7 - Added: changed value to price.
 * v0.1.6 - Added: Downsell, Ad, Content Archive, Subscription Pause and included price for all subscriptions
 * v0.1.5 - remove journeys call 
 * v0.1.4 - Rename tag to variant
