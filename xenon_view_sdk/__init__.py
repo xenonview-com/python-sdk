@@ -113,104 +113,104 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def initialSubscription(self, tier, method=None, value=None):
+    def initialSubscription(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Initial Subscription',
             'outcome': 'Subscribe - ' + tier,
             'result': 'success'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionDeclined(self, tier, method=None, value=None):
+    def subscriptionDeclined(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Initial Subscription',
             'outcome': 'Decline - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionRenewed(self, tier, method=None, value=None):
+    def subscriptionRenewed(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Renew - ' + tier,
             'result': 'success'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionCanceled(self, tier, method=None, value=None):
+    def subscriptionCanceled(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Cancel - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionPaused(self, tier, method=None, value=None):
+    def subscriptionPaused(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Subscription Renewal',
             'outcome': 'Paused - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionUpsold(self, tier, method=None, value=None):
+    def subscriptionUpsold(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Upsold - ' + tier,
             'result': 'success'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionUpsellDeclined(self, tier, method=None, value=None):
+    def subscriptionUpsellDeclined(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Declined - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def subscriptionDownsell(self, tier, method=None, value=None):
+    def subscriptionDownsell(self, tier, method=None, price=None):
         content = {
             'superOutcome': 'Subscription Upsold',
             'outcome': 'Downsell - ' + tier,
             'result': 'fail'
         }
         if method: content['method'] = method
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def adClicked(self, provider, id_=None, value=None):
+    def adClicked(self, provider, id_=None, price=None):
         content = {
             'superOutcome': 'Advertisement',
             'outcome': 'Ad Click - ' + provider,
             'result': 'success'
         }
         if id_: content['id'] = id_
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def adIgnored(self, provider, id_=None, value=None):
+    def adIgnored(self, provider, id_=None, price=None):
         content = {
             'superOutcome': 'Advertisement',
             'outcome': 'Ad Ignored - ' + provider,
             'result': 'fail'
         }
         if id_: content['id'] = id_
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
     def referral(self, kind, detail=None):
@@ -250,22 +250,22 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def upsold(self, product, value=None):
+    def upsold(self, product, price=None):
         content = {
             'superOutcome': 'Upsold Product',
             'outcome': 'Upsold - ' + product,
             'result': 'success'
         }
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def upsellDismissed(self, product, value=None):
+    def upsellDismissed(self, product, price=None):
         content = {
             'superOutcome': 'Upsold Product',
             'outcome': 'Dismissed - ' + product,
             'result': 'fail'
         }
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
     def checkedOut(self):
@@ -292,23 +292,23 @@ class Xenon(object, metaclass=Singleton):
         }
         self.outcomeAdd(content)
 
-    def purchased(self, method, value=None):
+    def purchased(self, method, price=None):
         content = {
             'superOutcome': 'Customer Purchase',
             'outcome': 'Purchase - ' + method,
             'result': 'success'
         }
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
-    def purchaseCanceled(self, method=None, value=None):
+    def purchaseCanceled(self, method=None, price=None):
         method = ' - ' + method if method else ''
         content = {
             'superOutcome': 'Customer Purchase',
             'outcome': 'Canceled' + method,
             'result': 'fail'
         }
-        if value: content['value'] = value
+        if price: content['price'] = price
         self.outcomeAdd(content)
 
     def promiseFulfilled(self):

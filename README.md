@@ -6,33 +6,33 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 * [What's New](#whats-new)
 * [Introduction](#intro)
 * [Steps To Get Started](#getting-started)
-  * [Identify Business Outcomes](#step-1)
-  * [Identify Customer Journey Milestones](#step-2)
-  * [Enumerate Technical Stack](#step-3)
-  * [Installation](#step-4)
-  * [Instrument Business Outcomes](#step-5)
-  * [Instrument Customer Journey Milestones](#step-6)
-  * [Determine Commit Points](#step-7)
-  * [(Optional) Group Customer Journeys](#step-8)
-  * [Analysis](#step-9)
-  * [Perform Experiments](#step-10)
+    * [Identify Business Outcomes](#step-1)
+    * [Identify Customer Journey Milestones](#step-2)
+    * [Enumerate Technical Stack](#step-3)
+    * [Installation](#step-4)
+    * [Instrument Business Outcomes](#step-5)
+    * [Instrument Customer Journey Milestones](#step-6)
+    * [Determine Commit Points](#step-7)
+    * [(Optional) Group Customer Journeys](#step-8)
+    * [Analysis](#step-9)
+    * [Perform Experiments](#step-10)
 * [Detailed Usage](#detailed-usage)
-  * [Installation](#installation)
-  * [Initialization](#instantiation)
-  * [Service/Subscription/SaaS Business Outcomes](#saas)
-  * [Ecommerce Business Outcomes](#ecom)
-  * [Customer Journey Milestones](#milestones)
-    * [Features Usage](#feature-usage)
-    * [Content Interaction](#content-interaction)
-  * [Commit Points](#commiting)
-  * [Heartbeats](#heartbeat)
-  * [Platforming](#platforming)
-  * [Experiments](#experiments)
-  * [Customer Journey Grouping](#deanonymizing-journeys)
-  * [Other Considerations](#other)
-    * [(Optional) Error Handling](#errors)
-    * [(Optional) Custom Customer Journey Milestones](#custom)
-    * [(Optional) Journey Identification](#cuuid)
+    * [Installation](#installation)
+    * [Initialization](#instantiation)
+    * [Service/Subscription/SaaS Business Outcomes](#saas)
+    * [Ecommerce Business Outcomes](#ecom)
+    * [Customer Journey Milestones](#milestones)
+        * [Features Usage](#feature-usage)
+        * [Content Interaction](#content-interaction)
+    * [Commit Points](#commiting)
+    * [Heartbeats](#heartbeat)
+    * [Platforming](#platforming)
+    * [Experiments](#experiments)
+    * [Customer Journey Grouping](#deanonymizing-journeys)
+    * [Other Considerations](#other)
+        * [(Optional) Error Handling](#errors)
+        * [(Optional) Custom Customer Journey Milestones](#custom)
+        * [(Optional) Journey Identification](#cuuid)
 * [License](#license)
 
 <br/>
@@ -162,27 +162,27 @@ As you view the categories, you can quickly identify issues (for example, if the
 
 **[Service/Subscription/SaaS Related Outcome Calls](#saas)**  (click on a call to see usage)
 
-| Category | Success | Failure | 
+| Category | Success | Decline |
 | --- | --- | --- |
-| Lead Capture | [`leadCaptured()`](#saas-lead-capture) | [`leadCaptureDeclined()`](#saas-lead-capture-fail) | 
-| Account Signup | [`accountSignup()`](#saas-account-signup) | [`accountSignupDeclined()`](#saas-account-signup-fail) | 
-| Application Installation | [`applicationInstalled()`](#saas-application-install) |  [`applicationNotInstalled()`](#saas-application-install-fail) | 
+| Lead Capture | [`leadCaptured()`](#saas-lead-capture) | [`leadCaptureDeclined()`](#saas-lead-capture-fail) |
+| Account Signup | [`accountSignup()`](#saas-account-signup) | [`accountSignupDeclined()`](#saas-account-signup-fail) |
+| Application Installation | [`applicationInstalled()`](#saas-application-install) | [`applicationNotInstalled()`](#saas-application-install-fail)|
 | Initial Subscription | [`initialSubscription()`](#saas-initial-subscription) | [`subscriptionDeclined()`](#saas-initial-subscription-fail) |
-| Subscription Renewed | [`subscriptionRenewed()`](#saas-renewed-subscription) | [`subscriptionCanceled()`](#saas-renewed-subscription-fail) / [`subscriptionPaused()`](#saas-paused-subscription) | 
-| Subscription Upsell | [`subscriptionUpsold()`](#saas-upsell-subscription) | [`subscriptionUpsellDeclined()`](#saas-upsell-subscription-fail) / [`subscriptionDownsell()`](#saas-downsell-subscription)| 
+| Subscription Renewed | [`subscriptionRenewed()`](#saas-renewed-subscription) | [`subscriptionCanceled()`](#saas-renewed-subscription-fail) / [`subscriptionPaused()`](#saas-paused-subscription) |
+| Subscription Upsell | [`subscriptionUpsold()`](#saas-upsell-subscription) | [`subscriptionUpsellDeclined()`](#saas-upsell-subscription-fail) / [`subscriptionDownsell()`](#saas-downsell-subscription) |
 | Ad Clicked | [`adClicked()`](#saas-ad-clicked) | [`adIgnored()`](#saas-ad-ignored) |
-| Referral | [`referral()`](#saas-referral) | [`referralDeclined()`](#saas-referral-fail) | 
+| Referral | [`referral()`](#saas-referral) | [`referralDeclined()`](#saas-referral-fail) |
 
 
 **[Ecom Related Outcome Calls](#ecom)** (click on a call to see usage)
 
-| Category | Success | Failure |
-| --- | --- | --- | 
+| Category | Success | Decline |
+| --- | --- | --- |
 | Lead Capture | [`leadCaptured()`](#ecom-lead-capture) | [`leadCaptureDeclined()`](#ecom-lead-capture-fail) | 
 | Account Signup | [`accountSignup()`](#ecom-account-signup) | [`accountSignupDeclined()`](#ecom-account-signup-fail) | 
 | Add To Cart | [`productAddedToCart()`](#ecom-product-to-cart) | [`productNotAddedToCart()`](#ecom-product-to-cart-fail) |
 | Product Upsell | [`upsold()`](#ecom-upsell) | [`upsellDismissed()`](#ecom-upsell-fail) | 
-| Checkout | [`checkedOut()`](#ecom-checkout) | [`checkoutCanceled()`](#ecom-checkout-fail)/[`productRemoved()`](#ecom-checkout-remove) | 
+| Checkout | [`checkedOut()`](#ecom-checkout) | [`checkoutCanceled()`](#ecom-checkout-fail) / [`productRemoved()`](#ecom-checkout-remove) | 
 | Purchase | [`purchased()`](#ecom-purchase) | [`purchaseCanceled()`](#ecom-purchase-fail) | 
 | Promise Fulfillment | [`promiseFulfilled()`](#ecom-promise-fulfillment) | [`promiseUnfulfilled()`](#ecom-promise-fulfillment-fail) | 
 | Product Disposition | [`productKept()`](#ecom-product-outcome) | [`productReturned()`](#ecom-product-outcome-fail) |
@@ -297,7 +297,7 @@ You can install the View Python SDK from [PyPI](https://pypi.org/project/xenon-v
 
 ### Instantiation <a id='instantiation'></a>
 
-The View SDK is a JS module you'll need to include in your application. After inclusion, you'll need to init the singleton object:
+The View SDK is a Python module you'll need to include in your application. After inclusion, you'll need to init the singleton object:
 
 
 ```python
@@ -454,13 +454,14 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" # optional
-value = '$25' #optional
+price = '$25' #optional
+term = "30d" #optional
 
 # Successful subscription of the lowest tier with Stripe
 Xenon().initialSubscription(tierSilver, method)
 
-# Successful subscription of the lowest tier with Stripe for $25
-Xenon().initialSubscription(tierSilver, method, value)
+# Successful subscription of the lowest tier with Stripe for $25 for term
+Xenon().initialSubscription(tierSilver, method, price, term)
 # ...
 # Successful subscription to the middle tier
 Xenon().initialSubscription(tierGold)
@@ -484,7 +485,8 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" # optional
-value = '$25' # optional
+price = '$25' # optional
+term = "30d" # optional
 
 # Unsuccessful subscription of the lowest tier
 Xenon().subscriptionDeclined(tierSilver)
@@ -498,8 +500,8 @@ Xenon().subscriptionDeclined(tierPlatium)
 # Unsuccessful subscription of an annual period with Stripe
 Xenon().subscriptionDeclined(annualSilver, method)
 
-# Unsuccessful subscription of an annual period for $25
-Xenon().subscriptionDeclined(annualSilver, method, value)
+# Unsuccessful subscription of an annual period for $25 for term
+Xenon().subscriptionDeclined(annualSilver, method, price, term)
 ```
 
 <br/>
@@ -519,13 +521,14 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" #optional
-value = '$25' # optional
+price = '$25' # optional
+term = "30d" #optional
 
 # Successful renewal of the lowest tier with Stripe
 Xenon().subscriptionRenewed(tierSilver, method)
 
-# Successful renewal of the lowest tier with Stripe for $25
-Xenon().subscriptionRenewed(annualSilver, method, value)
+# Successful renewal of the lowest tier with Stripe for $25 for term
+Xenon().subscriptionRenewed(annualSilver, method, price, term)
 # ...
 # Successful renewal of the middle tier
 Xenon().subscriptionRenewed(tierGold)
@@ -549,7 +552,8 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" #optional
-value = '$25' # optional
+price = '$25' # optional
+term = "30d" #optional
 
 # Canceled subscription of the lowest tier
 Xenon().subscriptionCanceled(tierSilver)
@@ -564,7 +568,7 @@ Xenon().subscriptionCanceled(tierPlatium)
 Xenon().subscriptionCanceled(annualSilver, method)
 
 # Canceled subscription of an annual period with Stripe for $25
-Xenon().subscriptionCanceled(annualSilver, method, value)
+Xenon().subscriptionCanceled(annualSilver, method, price, term)
 ```
 <br/>
 
@@ -579,7 +583,8 @@ tierGold = "Gold"
 tierPlatium = "Platium"
 annualSilver = "Silver Annual"
 method = "Stripe" #optional
-value = '$25' # optional
+price = '$25' # optional
+term = "30d" #optional
 
 # Paused subscription of the lowest tier
 Xenon().subscriptionPaused(tierSilver)
@@ -593,8 +598,8 @@ Xenon().subscriptionPaused(tierPlatium)
 # Paused subscription of an annual period with Stripe
 Xenon().subscriptionPaused(annualSilver, method)
 
-# Paused subscription of an annual period with Stripe for $25
-Xenon().subscriptionPaused(annualSilver, method, value)
+# Paused subscription of an annual period with Stripe for $25 for term
+Xenon().subscriptionPaused(annualSilver, method, price, term)
 ```
 
 <br/>
@@ -613,15 +618,16 @@ tierGold = "Gold Monthly"
 tierPlatium = "Platium"
 annualGold = "Gold Annual"
 method = "Stripe" #optional
-value = '$25' # optional
+price = '$25' # optional
+term = "30d" #optional
 
 # Assume already subscribed to Silver
 
 # Successful upsell of the middle tier with Stripe
 Xenon().subscriptionUpsold(tierGold, method)
 
-# Successful upsell of the middle tier with Stripe for $25
-Xenon().subscriptionUpsold(tierGold, method, value)
+# Successful upsell of the middle tier with Stripe for $25 for term
+Xenon().subscriptionUpsold(tierGold, method, price, term)
 # ...
 # Successful upsell of the top tier
 Xenon().subscriptionUpsold(tierPlatium)
@@ -641,7 +647,8 @@ tierGold = "Gold Monthly"
 tierPlatium = "Platium"
 annualGold = "Gold Annual"
 method = "Stripe" #optional
-value = '$25' # optional
+price = '$25' # optional
+term = "30d" #optional
 
 # Assume already subscribed to Silver
 
@@ -654,8 +661,8 @@ Xenon().subscriptionUpsellDeclined(tierPlatium)
 # Rejected upsell of middle tier - annual period
 Xenon().subscriptionUpsellDeclined(annualGold, method)
 
-# Rejected upsell of middle tier - annual period with Stripe for $25
-Xenon().subscriptionUpsellDeclined(annualGold, method, value)
+# Rejected upsell of middle tier - annual period with Stripe for $25 for term
+Xenon().subscriptionUpsellDeclined(annualGold, method, price, term)
 ```
 <br/>
 
@@ -668,7 +675,8 @@ tierGold = "Gold Monthly"
 tierPlatium = "Platium"
 annualGold = "Gold Annual"
 method = "Stripe" #optional
-value = '$15' #optional
+price = '$15' #optional
+term = "30d" #optional
 
 # Assume already subscribed to Platium
 
@@ -678,8 +686,8 @@ Xenon().subscriptionDownsell(tierGold)
 # Downsell to Gold annual with method
 Xenon().subscriptionDownsell(annualGold, method)
 
-# Downsell to Gold - annual period with Stripe for $15
-Xenon().subscriptionDownsell(annualGold, method, value)
+# Downsell to Gold - annual period with Stripe for $15 for term
+Xenon().subscriptionDownsell(annualGold, method, price, term)
 ```
 
 <br/>
@@ -696,7 +704,7 @@ from xenon_view_sdk import Xenon
 
 provider = "AdMob"
 id = "ID-1234" # optional
-value = "$0.25" # optional
+price = "$0.25" # optional
 
 # Click an Ad from AdMob
 Xenon().adClicked(provider)
@@ -704,8 +712,8 @@ Xenon().adClicked(provider)
 # Click an Ad from AdMob identfied by ID-1234
 Xenon().adClicked(provider, id)
 # ...
-# Click an Ad from AdMob identfied by ID-1234 with value 
-Xenon().adClicked(provider, id, value)
+# Click an Ad from AdMob identfied by ID-1234 with price 
+Xenon().adClicked(provider, id, price)
 ```
 
 <br/>
@@ -717,7 +725,7 @@ from xenon_view_sdk import Xenon
 
 provider = "AdMob"
 id = "ID-1234" # optional
-value = "$0.25" # optional
+price = "$0.25" # optional
 
 # No action on an Ad from AdMob
 Xenon().adIgnored(provider)
@@ -725,8 +733,8 @@ Xenon().adIgnored(provider)
 # No action on an Ad from AdMob identfied by ID-1234
 Xenon().adIgnored(provider, id)
 # ...
-# No action on an Ad from AdMob identfied by ID-1234 with value 
-Xenon().adIgnored(provider, id, value)
+# No action on an Ad from AdMob identfied by ID-1234 with price 
+Xenon().adIgnored(provider, id, price)
 ```
 
 <br/>
@@ -919,7 +927,7 @@ keyboardValue = '$139' #optional
 # upsold a laptop
 Xenon().upsold(laptop)
 # ...
-# upsold a keyboard with value
+# upsold a keyboard with price
 Xenon().upsold(keyboard, keyboardValue)
 ```
 
@@ -995,13 +1003,13 @@ Use this call to track when your Customer completes a purchase.
 from xenon_view_sdk import Xenon
 
 method = "Stripe"
-value = '$2011' # optional
+price = '$2011' # optional
 
 # Successful Purchase
 Xenon().purchased(method)
 
 # Successful Purchase for $2011
-Xenon().purchased(method, value)
+Xenon().purchased(method, price)
 ```
 
 <br/>
@@ -1011,14 +1019,14 @@ Xenon().purchased(method, value)
 from xenon_view_sdk import Xenon
 
 method = "Stripe" #optional
-value = '$2011' # optional
+price = '$2011' # optional
 
 # Customer cancels the purchase.
 Xenon().purchaseCanceled()
 # -OR-
 Xenon().purchaseCanceled(method)
 # -OR-
-Xenon().purchaseCanceled(method, value)
+Xenon().purchaseCanceled(method, price)
 ```
 
 <br/>

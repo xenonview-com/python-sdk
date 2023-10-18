@@ -15,6 +15,7 @@ def setup_function(function):
 def teardown_function(function):
     Xenon._instance = None
 
+
 # Platforming, Tagging and Init tests
 
 
@@ -78,6 +79,7 @@ def test_canAddOutcomeWithTags():
     Xenon().applicationInstalled()
     journey = Xenon().journey()[0]
     assert journey['tags'] == variants
+
 
 # Stock Business Outcomes tests
 
@@ -155,10 +157,10 @@ def test_canInitiallySubscribeWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().initialSubscription(annualSilver, method, value)
+    price = '$25'
+    Xenon().initialSubscription(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_cannotInitiallySubscribe():
@@ -176,10 +178,10 @@ def test_cannotInitiallySubscribeWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionDeclined(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionDeclined(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_canRenewSubscription():
@@ -197,10 +199,10 @@ def test_canRenewSubscriptionWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionRenewed(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionRenewed(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_cannotRenewSubscription():
@@ -218,10 +220,10 @@ def test_cannotRenewSubscriptionWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionCanceled(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionCanceled(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_canPauseSubscription():
@@ -239,10 +241,11 @@ def test_canPauseSubscriptionWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionPaused(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionPaused(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
+
 
 def test_canUpsellSubscription():
     Xenon(apiKey='<API KEY>')
@@ -254,14 +257,15 @@ def test_canUpsellSubscription():
     assert journey['outcome'] == 'Upsold - Silver Annual'
     assert journey['result'] == 'success'
 
+
 def test_canUpsellSubscriptionWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionUpsold(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionUpsold(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_cannotUpsellSubscription():
@@ -274,14 +278,15 @@ def test_cannotUpsellSubscription():
     assert journey['outcome'] == 'Declined - Silver Annual'
     assert journey['result'] == 'fail'
 
+
 def test_cannotUpsellSubscriptionWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionUpsellDeclined(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionUpsellDeclined(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_canSubscriptionDownsell():
@@ -294,14 +299,15 @@ def test_canSubscriptionDownsell():
     assert journey['outcome'] == 'Downsell - Silver Annual'
     assert journey['result'] == 'fail'
 
+
 def test_canSubscriptionDownsellWithValue():
     Xenon(apiKey='<API KEY>')
     annualSilver = "Silver Annual"
     method = "Stripe"
-    value = '$25'
-    Xenon().subscriptionDownsell(annualSilver, method, value)
+    price = '$25'
+    Xenon().subscriptionDownsell(annualSilver, method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_canAdClicked():
@@ -319,11 +325,11 @@ def test_canAdClickedWithValue():
     Xenon(apiKey='<API KEY>')
     provider = "AdMod"
     id_ = "ID-1234"
-    value = '$25'
-    Xenon().adClicked(provider, id_, value)
+    price = '$25'
+    Xenon().adClicked(provider, id_, price)
     journey = Xenon().journey()[0]
     assert journey['id'] == id_
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_canAdIgnored():
@@ -341,13 +347,11 @@ def test_canAdIgnoredWithValue():
     Xenon(apiKey='<API KEY>')
     provider = "AdMod"
     id_ = "ID-1234"
-    value = '$25'
-    Xenon().adIgnored(provider, id_, value)
+    price = '$25'
+    Xenon().adIgnored(provider, id_, price)
     journey = Xenon().journey()[0]
     assert journey['id'] == id_
-    assert journey['value'] == value
-
-
+    assert journey['price'] == price
 
 
 def test_canRefer():
@@ -449,22 +453,23 @@ def test_canPurchase():
     assert journey['outcome'] == 'Purchase - Stripe'
     assert journey['result'] == 'success'
 
+
 def test_canPurchaseWithValue():
     Xenon(apiKey='<API KEY>')
     method = "Stripe"
-    value = '$25'
-    Xenon().purchased(method, value)
+    price = '$25'
+    Xenon().purchased(method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_cannotPurchase():
     Xenon(apiKey='<API KEY>')
     method = "Stripe"  # optional
-    value = '$25'
-    Xenon().purchaseCanceled(method, value)
+    price = '$25'
+    Xenon().purchaseCanceled(method, price)
     journey = Xenon().journey()[0]
-    assert journey['value'] == value
+    assert journey['price'] == price
 
 
 def test_canFulfillPromise():
@@ -600,6 +605,7 @@ def test_canDeleteContent():
     assert journey['identifier'] == identifier
     assert journey['timestamp'] > 0.0
 
+
 def test_canArchiveContent():
     Xenon(apiKey='<API KEY>')
     contentType = "Blog Comment"
@@ -669,6 +675,7 @@ def test_doesNotAddDuplicateButIncreasesCountForFeature():
     assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
 
+
 def test_doesNotAddDuplicateButIncreasesCountForContent():
     Xenon(apiKey='<API KEY>')
     name = "Recipe"
@@ -679,6 +686,7 @@ def test_doesNotAddDuplicateButIncreasesCountForContent():
     assert journey['timestamp'] > 0.0
     assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
+
 
 def test_doesNotAddDuplicateButIncreasesCountForContentWithIdentifier():
     Xenon(apiKey='<API KEY>')
@@ -691,6 +699,7 @@ def test_doesNotAddDuplicateButIncreasesCountForContentWithIdentifier():
     assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
 
+
 def test_doesNotAddDuplicateButIncreasesCountForContentWithDetail():
     Xenon(apiKey='<API KEY>')
     name = "Recipe"
@@ -701,6 +710,7 @@ def test_doesNotAddDuplicateButIncreasesCountForContentWithDetail():
     assert journey['timestamp'] > 0.0
     assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
+
 
 def test_doesNotAddDuplicateButIncreasesCountForCustom():
     Xenon(apiKey='<API KEY>')
@@ -716,6 +726,7 @@ def test_doesNotAddDuplicateButIncreasesCountForCustom():
     assert journey['count'] == 2
     assert len(Xenon().journey()) == 1
 
+
 def test_doesAddAlmostDuplicateForFeature():
     Xenon(apiKey='<API KEY>')
     name = "Scale Recipe"
@@ -725,6 +736,7 @@ def test_doesAddAlmostDuplicateForFeature():
     assert journey['category'] == 'Feature'
     assert journey['timestamp'] > 0.0
     assert len(Xenon().journey()) == 2
+
 
 def test_doesAddAlmostDuplicateForContent():
     Xenon(apiKey='<API KEY>')
@@ -736,6 +748,7 @@ def test_doesAddAlmostDuplicateForContent():
     assert journey['timestamp'] > 0.0
     assert len(Xenon().journey()) == 2
 
+
 def test_doesAddAlmostDuplicateForContentWithIdentifier():
     Xenon(apiKey='<API KEY>')
     name = "Scale Recipe"
@@ -745,6 +758,7 @@ def test_doesAddAlmostDuplicateForContentWithIdentifier():
     assert journey['category'] == 'Content'
     assert journey['timestamp'] > 0.0
     assert len(Xenon().journey()) == 2
+
 
 def test_doesAddAlmostDuplicateForContentWithDetail():
     Xenon(apiKey='<API KEY>')
@@ -756,6 +770,7 @@ def test_doesAddAlmostDuplicateForContentWithDetail():
     assert journey['timestamp'] > 0.0
     assert len(Xenon().journey()) == 2
 
+
 def test_doesAddAlmostDuplicateForCustom():
     Xenon(apiKey='<API KEY>')
     category = "Function"
@@ -763,7 +778,7 @@ def test_doesAddAlmostDuplicateForCustom():
     name = "Query Database"
     detail = "User Lookup"
     Xenon().milestone(category, operation, name, detail)
-    Xenon().milestone(category, operation, name, detail+'2')
+    Xenon().milestone(category, operation, name, detail + '2')
     journey = Xenon().journey()[0]
     assert journey['category'] == 'Function'
     assert journey['timestamp'] > 0.0
