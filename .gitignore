@@ -55,6 +55,7 @@ coverage.xml
 *,cover
 .hypothesis/
 .ant-targets-build.xml
+.private
 
 # Translations
 *.mo

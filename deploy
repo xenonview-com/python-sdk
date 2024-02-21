@@ -12,8 +12,8 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 fi
 } &> /dev/null
 
-read -r -p "PYPI username: " USER
-read -r -s -p "PYPI password: " PASS
+USER="__token__"
+read -r -s -p "PYPI token: " PASS
 echo ''
 cat > $scriptDir/working/.pypirc <<EOF
 [pypi]
