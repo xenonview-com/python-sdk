@@ -83,6 +83,28 @@ def test_canAddOutcomeWithTags():
 
 # Stock Business Outcomes tests
 
+def test_canAttributeLeads():
+    Xenon(apiKey='<API KEY>')
+    source = 'Google Ad'
+    identifier = 'Search'
+    Xenon().leadAttributed(source, identifier)
+    journey = Xenon().journey()[0]
+    assert journey['superOutcome'] == 'Lead Attributed'
+    assert journey['outcome'] == source
+    assert journey['id'] == identifier
+    assert journey['result'] == 'success'
+
+
+def test_canAttributeLeadsWithoutId():
+    Xenon(apiKey='<API KEY>')
+    source = 'Google Ad'
+    Xenon().leadAttributed(source)
+    journey = Xenon().journey()[0]
+    assert journey['superOutcome'] == 'Lead Attributed'
+    assert journey['outcome'] == source
+    assert 'id' not in journey.keys()
+    assert journey['result'] == 'success'
+
 
 def test_canCaptureLeads():
     Xenon(apiKey='<API KEY>')
@@ -223,6 +245,7 @@ def test_canRenewSubscriptionWithPrice():
     Xenon().subscriptionRenewed(annualSilver, method, price)
     journey = Xenon().journey()[0]
     assert journey['price'] == price
+
 
 def test_canRenewSubscriptionWithTerm():
     Xenon(apiKey='<API KEY>')

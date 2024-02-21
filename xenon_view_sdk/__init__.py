@@ -65,6 +65,16 @@ class Xenon(object, metaclass=Singleton):
 
     # Stock Business Outcomes:
 
+    def leadAttributed(self, source, identifier=None):
+        content = {
+            'superOutcome': 'Lead Attributed',
+            'outcome': source,
+            'result': 'success'
+        }
+        if identifier:
+            content['id'] = identifier
+        self.outcomeAdd(content)
+
     def leadCaptured(self, specifier):
         content = {
             'superOutcome': 'Lead Capture',
@@ -488,7 +498,7 @@ class Xenon(object, metaclass=Singleton):
         jsonResponse = response.json()
         return jsonResponse
 
-    def heartbeat(self, PostMethod=post, sleepTime=1, verify=True):
+    def heartbeat(self, watchdog=None, PostMethod=post, sleepTime=1, verify=True):
         headers = {"Authorization": "Bearer " + self.__apiKey}
 
         parameters = {
@@ -496,6 +506,9 @@ class Xenon(object, metaclass=Singleton):
             "uuid": self.__id,
             "timestamp": datetime.now(utc).timestamp()
         }
+
+        if watchdog:
+            parameters['watchdog'] = watchdog
 
         if self.__platform: parameters["platform"] = self.__platform
         if len(self.__tags): parameters["tags"] = self.__tags
@@ -594,8 +607,8 @@ class Xenon(object, metaclass=Singleton):
         if 'action' not in contentKeys or 'action' not in lastKeys: return False
         if content['action'] != last['action']: return False
         return self.duplicateFeature(last, content, lastKeys, contentKeys) or \
-               self.duplicateContent(last, content, lastKeys, contentKeys) or \
-               self.duplicateMilestone(last, content, lastKeys, contentKeys)
+            self.duplicateContent(last, content, lastKeys, contentKeys) or \
+            self.duplicateMilestone(last, content, lastKeys, contentKeys)
 
     def duplicateFeature(self, last, content, lastKeys, contentKeys):
         if content['category'] != 'Feature' or last['category'] != 'Feature': return False

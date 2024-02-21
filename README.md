@@ -38,6 +38,7 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
 <br/>
 
 ## What's New <a id='whats-new'></a>
+* v0.1.9 - Added: Abandonment Watchdog Feature, leadAttribution outcome
 * v0.1.8 - Added: Term for all subscriptions.
 * v0.1.7 - Added: changed value to price.
 * v0.1.6 - Added: Downsell, Ad, Content Archive, Subscription Pause and included price for all subscriptions
@@ -164,31 +165,33 @@ As you view the categories, you can quickly identify issues (for example, if the
 
 **[Service/Subscription/SaaS Related Outcome Calls](#saas)**  (click on a call to see usage)
 
-| Category | Success | Decline |
-| --- | --- | --- |
-| Lead Capture | [`leadCaptured()`](#saas-lead-capture) | [`leadCaptureDeclined()`](#saas-lead-capture-fail) |
-| Account Signup | [`accountSignup()`](#saas-account-signup) | [`accountSignupDeclined()`](#saas-account-signup-fail) |
-| Application Installation | [`applicationInstalled()`](#saas-application-install) | [`applicationNotInstalled()`](#saas-application-install-fail)|
-| Initial Subscription | [`initialSubscription()`](#saas-initial-subscription) | [`subscriptionDeclined()`](#saas-initial-subscription-fail) |
-| Subscription Renewed | [`subscriptionRenewed()`](#saas-renewed-subscription) | [`subscriptionCanceled()`](#saas-renewed-subscription-fail) / [`subscriptionPaused()`](#saas-paused-subscription) |
-| Subscription Upsell | [`subscriptionUpsold()`](#saas-upsell-subscription) | [`subscriptionUpsellDeclined()`](#saas-upsell-subscription-fail) / [`subscriptionDownsell()`](#saas-downsell-subscription) |
-| Ad Clicked | [`adClicked()`](#saas-ad-clicked) | [`adIgnored()`](#saas-ad-ignored) |
-| Referral | [`referral()`](#saas-referral) | [`referralDeclined()`](#saas-referral-fail) |
+| Category                 | Success                                               | Decline                                                                                                                    |
+|--------------------------|-------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Lead Attribution         | [`leadAttribution()`](#saas-lead-attribution)         |                                                                                                                            |
+| Lead Capture             | [`leadCaptured()`](#saas-lead-capture)                | [`leadCaptureDeclined()`](#saas-lead-capture-fail)                                                                         |
+| Account Signup           | [`accountSignup()`](#saas-account-signup)             | [`accountSignupDeclined()`](#saas-account-signup-fail)                                                                     |
+| Application Installation | [`applicationInstalled()`](#saas-application-install) | [`applicationNotInstalled()`](#saas-application-install-fail)                                                              |
+| Initial Subscription     | [`initialSubscription()`](#saas-initial-subscription) | [`subscriptionDeclined()`](#saas-initial-subscription-fail)                                                                |
+| Subscription Renewed     | [`subscriptionRenewed()`](#saas-renewed-subscription) | [`subscriptionCanceled()`](#saas-renewed-subscription-fail) / [`subscriptionPaused()`](#saas-paused-subscription)          |
+| Subscription Upsell      | [`subscriptionUpsold()`](#saas-upsell-subscription)   | [`subscriptionUpsellDeclined()`](#saas-upsell-subscription-fail) / [`subscriptionDownsell()`](#saas-downsell-subscription) |
+| Ad Clicked               | [`adClicked()`](#saas-ad-clicked)                     | [`adIgnored()`](#saas-ad-ignored)                                                                                          |
+| Referral                 | [`referral()`](#saas-referral)                        | [`referralDeclined()`](#saas-referral-fail)                                                                                |
 
 
 **[Ecom Related Outcome Calls](#ecom)** (click on a call to see usage)
 
-| Category | Success | Decline |
-| --- | --- | --- |
-| Lead Capture | [`leadCaptured()`](#ecom-lead-capture) | [`leadCaptureDeclined()`](#ecom-lead-capture-fail) | 
-| Account Signup | [`accountSignup()`](#ecom-account-signup) | [`accountSignupDeclined()`](#ecom-account-signup-fail) | 
-| Add To Cart | [`productAddedToCart()`](#ecom-product-to-cart) | [`productNotAddedToCart()`](#ecom-product-to-cart-fail) |
-| Product Upsell | [`upsold()`](#ecom-upsell) | [`upsellDismissed()`](#ecom-upsell-fail) | 
-| Checkout | [`checkedOut()`](#ecom-checkout) | [`checkoutCanceled()`](#ecom-checkout-fail) / [`productRemoved()`](#ecom-checkout-remove) | 
-| Purchase | [`purchased()`](#ecom-purchase) | [`purchaseCanceled()`](#ecom-purchase-fail) | 
-| Promise Fulfillment | [`promiseFulfilled()`](#ecom-promise-fulfillment) | [`promiseUnfulfilled()`](#ecom-promise-fulfillment-fail) | 
-| Product Disposition | [`productKept()`](#ecom-product-outcome) | [`productReturned()`](#ecom-product-outcome-fail) |
-| Referral | [`referral()`](#ecom-referral) | [`referralDeclined()`](#ecom-referral-fail) |
+| Category            | Success                                           | Decline                                                                                   |
+|---------------------|---------------------------------------------------|-------------------------------------------------------------------------------------------|
+| Lead Attribution    | [`leadAttribution()`](#ecom-lead-attribution)     |                                                                                           |
+| Lead Capture        | [`leadCaptured()`](#ecom-lead-capture)            | [`leadCaptureDeclined()`](#ecom-lead-capture-fail)                                        | 
+| Account Signup      | [`accountSignup()`](#ecom-account-signup)         | [`accountSignupDeclined()`](#ecom-account-signup-fail)                                    | 
+| Add To Cart         | [`productAddedToCart()`](#ecom-product-to-cart)   | [`productNotAddedToCart()`](#ecom-product-to-cart-fail)                                   |
+| Product Upsell      | [`upsold()`](#ecom-upsell)                        | [`upsellDismissed()`](#ecom-upsell-fail)                                                  | 
+| Checkout            | [`checkedOut()`](#ecom-checkout)                  | [`checkoutCanceled()`](#ecom-checkout-fail) / [`productRemoved()`](#ecom-checkout-remove) | 
+| Purchase            | [`purchased()`](#ecom-purchase)                   | [`purchaseCanceled()`](#ecom-purchase-fail)                                               | 
+| Promise Fulfillment | [`promiseFulfilled()`](#ecom-promise-fulfillment) | [`promiseUnfulfilled()`](#ecom-promise-fulfillment-fail)                                  | 
+| Product Disposition | [`productKept()`](#ecom-product-outcome)          | [`productReturned()`](#ecom-product-outcome-fail)                                         |
+| Referral            | [`referral()`](#ecom-referral)                    | [`referralDeclined()`](#ecom-referral-fail)                                               |
 
 <br/>
 
@@ -327,6 +330,28 @@ Of course, you'll have to make the following modifications to the above code:
 [back to top](#contents)
 
 ### Service/Subscription/SaaS Related Business Outcomes <a id='saas'></a>
+<br/>
+
+#### Lead Attributed  <a id='saas-lead-attributed'></a>
+Use this call to track Lead Attribution (Google Ads, Facebook Ads, etc.)
+You can add a source and identifier string to the call to differentiate as follows:
+
+<br/>
+
+##### ```leadAttributed()```
+
+```python
+from xenon_view_sdk import Xenon
+
+source = 'Google Ad'
+identifier = 'Search'
+
+# Successful Lead Attributed to Google Ad
+Xenon().leadAttributed(source)
+#...
+# Successful Lead Attributed to Google Search Ad
+Xenon().leadAttributed(source, identifier)
+```
 
 <br/>
 
@@ -783,6 +808,28 @@ Xenon().referralDeclined(kind)
 
 ### Ecommerce Related Outcomes <a id='ecom'></a>
 
+<br/>
+
+#### Lead Attributed  <a id='ecom-lead-attributed'></a>
+Use this call to track Lead Attribution (Google Ads, Facebook Ads, etc.)
+You can add a source and identifier string to the call to differentiate as follows:
+
+<br/>
+
+##### ```leadAttributed()```
+
+```python
+from xenon_view_sdk import Xenon
+
+source = 'Google Ad'
+identifier = 'Search'
+
+# Successful Lead Attributed to Google Ad
+Xenon().leadAttributed(source)
+#...
+# Successful Lead Attributed to Google Search Ad
+Xenon().leadAttributed(source, identifier)
+```
 
 <br/>
 
@@ -1377,7 +1424,9 @@ This call commits a customer journey to Xenon View for analysis.
 
 Business Outcomes and Customer Journey Milestones are tracked locally in memory until you commit them to the Xenon View system.
 You can use the heartbeat call if you want to commit in batch.
-Additionally, the heartbeat call will update a last-seen metric for customer journeys that have yet to arrive at Business Outcome. The last-seen metric is useful when analyzing stalled Customer Journeys.
+
+The heartbeat call will update a last-seen metric for customer journeys that have yet to arrive at Business Outcome. 
+The last-seen metric is useful when analyzing stalled Customer Journeys.
 
 Usage is as follows:
 
@@ -1391,6 +1440,33 @@ from xenon_view_sdk import Xenon
 Xenon().heartbeat()
 ```
 This call commits any uncommitted journeys to Xenon View for analysis and updates the last accessed time.
+
+> **:memo: Note:** Optionally, you can set abandonment timers via the watchdog parameter. This will allow you to indicate the failed to 
+reach outcomes if no activity is recorded before a specified timeout. 
+
+Usage is as follows:
+
+<br/>
+
+#### `heartbeat(watchdog={params})`
+```python
+from xenon_view_sdk import Xenon
+
+# you can set up an abandonment watchdog
+Xenon().heartbeat(watchdog={
+        'if_abandoned': {
+            'superOutcome': 'Checkout',
+            'outcome': 'abandoned',
+            'result': 'fail'
+        },
+        'expires_in_seconds': 600, #10-mins
+    })
+
+# you can remove an active watchdog
+Xenon().heartbeat(watchdog={
+        'remove': True
+    })
+```
 
 
 <br/>

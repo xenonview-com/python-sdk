@@ -49,6 +49,26 @@ def test_viewHeartbeatAdded():
                           verify=False)
     assert Xenon().journey() == []
 
+def test_viewHeartbeatAddedWithWatchdog():
+    requests = mock()
+    response = mock()
+    response.status_code = 200
+    when(requests).post('https://<apiUrl>/heartbeat', data=any(), headers=any(), verify=False).thenReturn(response)
+    when(response).json().thenReturn({'result': 'success'})
+    Xenon().heartbeat(watchdog={'remove': True}, PostMethod=requests.post, sleepTime=0, verify=False)
+
+    def matchesHeartbeatApiParameters(arg):
+        apiArguments = loads(arg)
+        parameters = apiArguments['parameters']
+        assert Eq({'remove': True}).matches(parameters['watchdog'])
+        return True
+
+    verify(requests).post('https://<apiUrl>/heartbeat',
+                          data=ArgThat(matchesHeartbeatApiParameters),
+                          headers={'Authorization': 'Bearer <apiKey>'},
+                          verify=False)
+    assert Xenon().journey() == []
+
 def test_viewHeartbeatAddedWithPlatform():
     requests = mock()
     response = mock()
