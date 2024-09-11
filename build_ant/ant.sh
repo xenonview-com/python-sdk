@@ -6,7 +6,7 @@ Host github.com
     StrictHostKeyChecking no
 EOF
 
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+#export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 cd /data
 } &> /dev/null
 # use "ant test -Dtest=<testname>" to single test

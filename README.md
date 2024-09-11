@@ -33,11 +33,13 @@ The Xenon View Python SDK is the Python SDK to interact with [XenonView](https:/
         * [(Optional) Error Handling](#errors)
         * [(Optional) Custom Customer Journey Milestones](#custom)
         * [(Optional) Journey Identification](#cuuid)
+        * [(Optional) Augment Calls with URL](#augment-calls)
 * [License](#license)
 
 <br/>
 
 ## What's New <a id='whats-new'></a>
+* v0.1.10 - method for adding url to every event
 * v0.1.9 - Added: Abandonment Watchdog Feature, leadAttribution outcome
 * v0.1.8 - Added: Term for all subscriptions.
 * v0.1.7 - Added: changed value to price.
@@ -1673,7 +1675,30 @@ assert Xenon().id() == testId
 # Lastly, you can generate a new Journey ID (useful for serialized async operations that are for different customers)
 Xenon().newId()
 ```
+<br/>
 
+[back to top](#contents)
+
+#### Augment Calls with URL <a id='augment-calls'></a>
+
+To track where milestones and outcomes occur, you can augment every call with a URL. 
+Call this function to set the URL of the page. Each call afterward will have the URL
+attached.
+
+<br/>
+
+##### `pageURL()`
+```python
+from xenon_view_sdk import Xenon
+
+# you can augment future calls with the page URL
+url = 'https://example.com'
+Xenon().pageURL(url)
+```
+
+<br/>
+
+[back to top](#contents)
 
 <br/>
 

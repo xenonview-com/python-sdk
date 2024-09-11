@@ -1,5 +1,5 @@
 __title__ = 'xenon_view_sdk'
-__version__ = '0.1.9'
+__version__ = '0.1.10'
 __author__ = 'Xenon'
 __copyright__ = 'Copyright 2021 Xenon'
 '''
@@ -37,6 +37,7 @@ class Xenon(object, metaclass=Singleton):
         self.__journey = []
         self.__id = str(uuid4()) if not uuid else uuid
         self.__restoreJourney = []
+        self.__pageURL = None
 
     def key(self, apiKey=None):
         if apiKey:
@@ -586,6 +587,8 @@ class Xenon(object, metaclass=Singleton):
     def journeyAdd(self, content):
         journey = self.journey()
         content['timestamp'] = datetime.now(utc).timestamp()
+        if self.__pageURL :
+            content['url'] = self.__pageURL
         if journey and len(journey) > 0:
             last = journey[-1]
             if self.isDuplicate(last, content):
@@ -648,3 +651,6 @@ class Xenon(object, metaclass=Singleton):
             restoreJourney.extend(currentJourney)
         self.storeJourney(restoreJourney)
         self.__restoreJourney = []
+
+    def pageURL(self, url):
+        self.__pageURL = url

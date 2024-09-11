@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+#set -o xtrace
 {
 unamestr=$(uname)
 scriptDir=$(dirname "$0")
@@ -8,7 +9,11 @@ mkdir -p ${scriptDir}/working
 if [[ "$unamestr" == 'Linux' ]]; then
     scriptDir=$(readlink -f "$scriptDir")
 elif [[ "$unamestr" == 'Darwin' ]]; then
-    scriptDir=$(greadlink -f "$scriptDir")
+        scriptDir=$(greadlink -f "$scriptDir")
+    PLATFORM=''
+    if [[ $(uname -p) == 'arm' ]]; then
+      PLATFORM='--platform linux/arm64/v8'
+    fi
 fi
 } &> /dev/null
 
@@ -24,12 +29,12 @@ pushd "$scriptDir"/docker
 
 echo "Building ant environment..."
 {
-	docker build -f DockerfileAnt -t python-sdk-ant .
+	docker build ${PLATFORM} -f DockerfileAnt -t python-sdk-ant .
 } &> /dev/null
 
 echo "running..."
 set +e
-docker run -it --rm -v "$scriptDir"/working:/data --name python-sdk-ant python-sdk-ant $@
+docker run ${PLATFORM} -it --rm -v "$scriptDir"/working:/data --name python-sdk-ant python-sdk-ant $@
 set -e
 
 rm -rf "$scriptDir"/working/xenon_view_sdk

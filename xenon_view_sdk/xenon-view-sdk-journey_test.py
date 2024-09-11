@@ -49,6 +49,33 @@ def test_viewJourneyAdded():
                           verify=False)
     assert Xenon().journey() == []
 
+def test_viewJourneyAddedWithUrl():
+    requests = mock()
+    response = mock()
+    response.status_code = 200
+    when(requests).post('https://<apiUrl>/journey', data=any(), headers=any(), verify=False).thenReturn(response)
+    when(response).json().thenReturn({'result': 'success'})
+    Xenon().pageURL("https://test.com")
+    Xenon().featureCompleted('test')
+    Xenon().commit(PostMethod=requests.post, sleepTime=0, verify=False)
+
+    def matchesJourneyApiParameters(arg):
+        apiArguments = loads(arg)
+        parameters = apiArguments['parameters']
+        assert Eq("ApiJourney").matches(apiArguments['name'])
+        assert Eq('Feature').matches(parameters['journey'][0]['category'])
+        assert Eq("https://test.com").matches(parameters['journey'][0]['url'])
+        assert any(float).matches(parameters['journey'][0]['timestamp'])
+        assert any(str).matches(parameters['uuid'])
+        assert any(float).matches(parameters['timestamp'])
+        return True
+
+    verify(requests).post('https://<apiUrl>/journey',
+                          data=ArgThat(matchesJourneyApiParameters),
+                          headers={'Authorization': 'Bearer <apiKey>'},
+                          verify=False)
+    assert Xenon().journey() == []
+
 
 def test_viewJourneyFailsWithOneSslError():
     requests = mock()
